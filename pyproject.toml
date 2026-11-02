@@ -1,8 +1,9 @@
 [project]
-name = "package-name"
+name = "rainfall-thresholds"
 version = "0.1.0"
-description = "PACKAGE_DESCRIPTION"
+description = "Rainfall intensity-duration thresholds for shallow landslides (Caine power law, frequentist fitting)"
 readme = "README.md"
+keywords = ["landslide", "rainfall threshold", "intensity-duration", "caine", "hydrology", "natural hazards", "italy", "italica"]
 requires-python = ">=3.12"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
@@ -12,6 +13,8 @@ authors = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: Hydrology",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
@@ -21,12 +24,12 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/agent-engineering-studio/package-name"
-Issues = "https://github.com/agent-engineering-studio/package-name/issues"
-Changelog = "https://github.com/agent-engineering-studio/package-name/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/agent-engineering-studio/rainfall-thresholds"
+Issues = "https://github.com/agent-engineering-studio/rainfall-thresholds/issues"
+Changelog = "https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/CHANGELOG.md"
 
 [build-system]
-requires = ["uv_build>=0.8,<0.13"]
+requires = ["uv_build>=0.13.6,<0.14"]
 build-backend = "uv_build"
 
 [dependency-groups]
@@ -59,7 +62,7 @@ testpaths = ["tests"]
 addopts = "--strict-markers"
 
 [tool.coverage.run]
-source = ["package_name"]
+source = ["rainfall_thresholds"]
 
 [tool.coverage.report]
 fail_under = 90
