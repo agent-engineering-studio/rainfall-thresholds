@@ -10,8 +10,8 @@ fitted on 5,974 real landslides.
 [![ci](https://github.com/agent-engineering-studio/rainfall-thresholds/actions/workflows/ci.yml/badge.svg)](https://github.com/agent-engineering-studio/rainfall-thresholds/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/rainfall-thresholds)](https://pypi.org/project/rainfall-thresholds/)
 [![Python](https://img.shields.io/pypi/pyversions/rainfall-thresholds)](https://pypi.org/project/rainfall-thresholds/)
-[![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen)](./pyproject.toml)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](./LICENSE)
+[![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen)](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/pyproject.toml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/LICENSE)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/agent-engineering-studio/rainfall-thresholds/main/docs/img/id-plane-dark.png">
@@ -416,7 +416,7 @@ shallow landslides (Python). https://github.com/agent-engineering-studio/rainfal
 
 Issues and pull requests are welcome: new regional thresholds, better event
 reconstruction, examples from other countries. See
-[CONTRIBUTING.md](./CONTRIBUTING.md). To set up and run the checks:
+[CONTRIBUTING.md](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/CONTRIBUTING.md). To set up and run the checks:
 
 ```bash
 uv sync
@@ -435,4 +435,4 @@ charts in `docs/img/` are drawn from it.
 
 ## License
 
-Code: [Apache-2.0](./LICENSE).
+Code: [Apache-2.0](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/LICENSE).
