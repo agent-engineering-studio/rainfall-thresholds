@@ -1,0 +1,75 @@
+# Documentation site, built with Zensical (https://zensical.org).
+# Build: `make docs` (zensical build --strict). Preview: `uv run --group docs zensical serve`.
+
+[project]
+site_name = "rainfall-thresholds"
+site_description = "Rainfall intensity-duration thresholds for shallow landslides (Caine power law, frequentist fitting)"
+site_url = "https://agentengineering.it/rainfall-thresholds/"
+repo_url = "https://github.com/agent-engineering-studio/rainfall-thresholds"
+repo_name = "agent-engineering-studio/rainfall-thresholds"
+edit_uri = "edit/main/docs/"
+copyright = "Code Apache-2.0. Italian thresholds fitted on e-ITALICA v4 (Brunetti et al. 2024, doi:10.5281/zenodo.14204473)."
+exclude_docs = """
+make_figures.py
+"""
+
+nav = [
+  { "Home" = "index.md" },
+  { "API reference" = [
+    { "Threshold" = "api/threshold.md" },
+    { "Rainfall events" = "api/events.md" },
+    { "Fitting" = "api/fit.md" },
+    { "Italy (T5 thresholds)" = "api/italy.md" },
+  ] },
+  { "Changelog" = "changelog.md" },
+  { "Contributing" = "contributing.md" },
+]
+
+[project.theme]
+features = [
+  "navigation.sections",
+  "navigation.top",
+  "content.code.copy",
+  "search.highlight",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+primary = "indigo"
+toggle.icon = "material/weather-night"
+toggle.name = "Dark mode"
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+primary = "indigo"
+toggle.icon = "material/weather-sunny"
+toggle.name = "Light mode"
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+show_root_heading = true
+show_source = false
+members_order = "source"
+separate_signature = true
+show_signature_annotations = true
+filters = ["!^_"]
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.tables]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions."pymdownx.highlight"]
+[project.markdown_extensions."pymdownx.inlinehilite"]
+[project.markdown_extensions."pymdownx.snippets"]
+base_path = ["."]
+check_paths = true
+[project.markdown_extensions."pymdownx.superfences"]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
