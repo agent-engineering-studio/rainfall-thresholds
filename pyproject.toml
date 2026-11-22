@@ -23,6 +23,13 @@ classifiers = [
 ]
 dependencies = []
 
+[project.optional-dependencies]
+# The MCP server (rainfall-thresholds-mcp). The package itself needs nothing.
+mcp = ["mcp>=2.3"]
+
+[project.scripts]
+rainfall-thresholds-mcp = "rainfall_thresholds.mcp_server:run"
+
 [project.urls]
 Homepage = "https://github.com/agent-engineering-studio/rainfall-thresholds"
 Issues = "https://github.com/agent-engineering-studio/rainfall-thresholds/issues"
@@ -34,8 +41,10 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "mcp>=2.3",
     "mypy>=1.13",
     "pytest>=8.3",
+    "pytest-asyncio>=0.24",
     "pytest-cov>=6.0",
     "ruff>=0.8",
 ]
@@ -71,6 +80,8 @@ warn_redundant_casts = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--strict-markers"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.run]
 source = ["rainfall_thresholds"]

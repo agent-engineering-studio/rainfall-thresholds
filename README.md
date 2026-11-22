@@ -51,6 +51,7 @@ those storms fall below it. The red star is the storm from the
 - [API at a glance](#api-at-a-glance)
 - [Benchmark](#benchmark)
 - [Notebooks and Docker](#notebooks-and-docker)
+- [For assistants and agents](#for-assistants-and-agents)
 - [Good to know](#good-to-know)
 - [References](#references) · [Citing](#citing) · [Contributing](#contributing)
 
@@ -437,6 +438,9 @@ rainfall part of a simple monitoring loop: a number to watch, not an alert.
 | `cutoff_at_budget(ordinary, budget, *, floor=None)` | function | that cutoff |
 | `Skill` | frozen dataclass | `caught`, `landslides`, `alerts`, `ordinary`, `unmeasured`; `.hit_rate`, `.alert_share`, `.discrimination`, `.alerts_per_caught` |
 | `auc(landslides, ordinary)` | function | Mann-Whitney AUC, ties count half |
+| `facts.threshold_facts`, `assess_facts`, `fit_facts` | functions | the same answers as JSON-ready dicts, with units and the alert rule |
+| `check.check_text(text, facts, *, question="")` | function | numbers of a text that are invented, rounded or in the wrong unit → `list[Misquote]` |
+| `mcp_server.create_server()`, `rainfall-thresholds-mcp` | MCP (extra `mcp`) | tools `threshold`, `assess`, `fit`, `check` |
 | `ITALICA_T5` | read-only mapping | `"italy"`, `"northern"`, `"central"`, `"southern"` → `PowerLawThreshold` |
 | `MACROREGIONS` | read-only mapping | macroregion → set of region names (e-ITALICA spelling) |
 | `macroregion_of(region)` | function | region name → macroregion, or `None` |
@@ -473,6 +477,35 @@ make docker-bench              # the benchmark, in a container
 
 The compose file gives no fixed name to containers or images: Compose names
 them after the project, so two copies run side by side.
+
+## For assistants and agents
+
+A language model may word the numbers; it should never compute them. The
+library gives them as data, and checks the words.
+
+- **Facts.** `rainfall_thresholds.facts`: `threshold_facts`, `assess_facts`
+  and `fit_facts` return plain dicts, with the unit in every key (`_mm`,
+  `_mm_h`, `_h`, `_decades`), what the threshold was fitted on, and the rule
+  that a threshold exceeded is not an alert.
+- **MCP server.** `pip install "rainfall-thresholds[mcp]"`, then
+  `rainfall-thresholds-mcp` on standard input and output. Four tools:
+  `threshold`, `assess`, `fit`, `check`. They compute only from what the call
+  gives them: no network, no live rain.
+- **A check of the text.** `check_text(text, facts)` finds numbers invented,
+  rounded the wrong way, or in the wrong unit: 30.9 mm written as 30.9 mm/h,
+  the trap of every rainfall threshold. It knows that a number is a fact of
+  its unit, not that it is said of the right thing.
+- **A faithfulness set.** `benchmarks/faithful.py`: questions, facts, and
+  answers written by hand, one faithful and one with known faults; in CI the
+  check must find exactly those faults (8 of 8 today). Answers of a model are
+  not in it yet.
+- **For coding agents.** [`llms.txt`](https://agentengineering.it/rainfall-thresholds/llms.txt),
+  [`llms-full.txt`](https://agentengineering.it/rainfall-thresholds/llms-full.txt)
+  and an [agent skill](https://agentengineering.it/rainfall-thresholds/skills/rainfall-thresholds/SKILL.md)
+  with the traps a model falls into when it writes this code from memory.
+
+The base package still has no dependencies: the MCP SDK comes only with the
+`mcp` extra.
 
 ## Good to know
 

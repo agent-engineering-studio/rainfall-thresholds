@@ -8,6 +8,18 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `facts`: `threshold_facts`, `assess_facts`, `fit_facts`, the answers as
+  JSON-ready dicts with units in the keys and the alert rule (#9).
+- `check.check_text`: numbers of a text that are invented, rounded the wrong
+  way or in the wrong unit (mm for mm/h) (#9).
+- An MCP server, `rainfall-thresholds-mcp`, with the optional extra `mcp`:
+  tools `threshold`, `assess`, `fit`, `check`; no network (#9).
+- `benchmarks/faithful.py`: a faithfulness set of hand-written answers, run
+  in CI with `--check` (#9).
+- `llms.txt`, `llms-full.txt` and an agent skill, built with the site (#9).
+
+### Added
+
 - `measure`: `skill`, `skill_at_budget`, `cutoff_at_budget`, `Skill` and
   `auc`, to measure a threshold on landslides and ordinary moments: hit rate,
   alert share, discrimination, alerts per landslide caught (#7). Same
