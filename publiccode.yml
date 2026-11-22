@@ -1,0 +1,86 @@
+# The card of rainfall-thresholds for the software catalogue of Developers Italia.
+# Checked in CI with italia/publiccode-parser-action.
+publiccodeYmlVersion: "0"
+name: rainfall-thresholds
+url: "https://github.com/agent-engineering-studio/rainfall-thresholds.git"
+landingURL: "https://agentengineering.it/rainfall-thresholds/"
+releaseDate: "2026-11-22"
+softwareVersion: "0.3.0"
+platforms: [web, linux, mac, windows]
+categories: [data-analytics, data-visualization]
+usedBy: []
+developmentStatus: beta
+softwareType: library
+intendedAudience:
+  scope: [environment, emergency-services, local-authorities, science-and-technology]
+  countries: [IT]
+description:
+  it:
+    shortDescription: Le soglie di pioggia che innescano le frane, in Python e in una pagina per tararle
+    longDescription: >
+      rainfall-thresholds risponde a una domanda: questa pioggia somiglia a quella che in passato
+      ha innescato frane superficiali? È una libreria Python senza dipendenze: ricostruisce gli
+      eventi di pioggia da una serie oraria, li confronta con una soglia intensità-durata (Caine),
+      tara una soglia sulle frane del passato e ne misura il costo in falsi allarmi. Contiene le
+      soglie T5 per l'Italia, tarate sulle 5.974 frane del catalogo e-ITALICA e ricalcolate a ogni
+      test. Con il repository viene una pagina in italiano per un ente, con Bootstrap Italia: si
+      apre sulle frane della sua regione, tara una soglia su quelle che contano, la confronta con
+      quella nazionale, ne misura il costo sui dati di un pluviometro dell'ente e la esporta. I
+      numeri sono verificati su un benchmark pubblico di casi noti; dove nessuno ha misurato, la
+      risposta è «non misurato», mai zero. Non usa dati personali e non richiede chiavi o account.
+      Non è un sistema di allerta e non legge pioggia dal vivo: una soglia superata non è
+      un'allerta, e l'allerta ufficiale resta il bollettino di criticità del Dipartimento della
+      Protezione Civile.
+    features:
+      - Eventi di pioggia da una serie oraria, con le ore non misurate
+      - Confronto con una soglia intensità-durata (Caine), in millimetri e in decadi
+      - Soglie T5 per l'Italia tarate sul catalogo e-ITALICA
+      - Taratura di una soglia sulle frane dell'ente
+      - Misura del costo in falsi allarmi
+      - Pagina per l'ente con Bootstrap Italia, configurabile con variabili d'ambiente
+      - Server MCP e controllo dei numeri per gli assistenti
+    screenshots:
+      - docs/img/id-plane-light.png
+  en:
+    shortDescription: The rainfall thresholds that trigger landslides, in Python and on a page to calibrate them
+    longDescription: >
+      rainfall-thresholds answers one question: is this rain like the rain that triggered shallow
+      landslides before? It is a Python library with no dependencies: it builds rainfall events
+      from an hourly series, compares them with an intensity-duration threshold (Caine), fits a
+      threshold on past landslides and measures its cost in false alarms. It ships T5 thresholds
+      for Italy, fitted on the 5,974 landslides of the e-ITALICA catalogue and refitted on every
+      test. The repository also has a page in Italian for a public body, built with Bootstrap
+      Italia: it opens on the landslides of its region, fits a threshold on the ones that matter,
+      compares it with the national one, measures its cost on the body's own rain gauge and
+      exports it. The numbers are checked on a public benchmark of known cases; where nobody
+      measured, the answer is "not measured", never zero. It uses no personal data and needs no
+      key or account. It is not an alert system and reads no live rain: a threshold exceeded is
+      not an alert, and the official alert stays the criticality bulletin of the Civil Protection
+      Department.
+    features:
+      - Rainfall events from an hourly series, with hours not measured
+      - Comparison with an intensity-duration threshold (Caine), in mm and in decades
+      - T5 thresholds for Italy fitted on the e-ITALICA catalogue
+      - Fitting a threshold on a body's own landslides
+      - Measuring the cost in false alarms
+      - A page for public bodies with Bootstrap Italia, set up with environment variables
+      - An MCP server and a check of the numbers for assistants
+    screenshots:
+      - docs/img/id-plane-light.png
+organisation:
+  name: Agent Engineering Studio
+  uri: "https://github.com/agent-engineering-studio"
+legal:
+  license: Apache-2.0
+  mainCopyrightOwner: Agent Engineering Studio
+maintenance:
+  type: community
+  contacts:
+    - name: Giuseppe Zileni
+localisation:
+  localisationReady: true
+  availableLanguages: [it, en]
+IT:
+  countryExtensionVersion: "1.0"
+  riuso:
+    codiceIPA: ""   # empty until the software belongs to a public administration

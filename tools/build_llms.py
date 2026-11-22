@@ -53,6 +53,8 @@ NOTES = """\
 DESCRIPTIONS = {
     "index.md": "the guide: the idea, how it works, quick start, events, comparing, fitting, "
     "measuring, the thresholds for Italy, benchmark, notebooks and Docker, API at a glance",
+    "explainer.md": "an interactive intensity-duration plane in the browser: a region, a "
+    "duration and a rain total against the Italian threshold and the landslides of the past",
     "riuso.md": "in Italian, for a public body: the calibration bench, what it does not do, "
     "what stays with the body",
     "changelog.md": "what changed in each release",

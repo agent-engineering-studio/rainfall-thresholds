@@ -29,6 +29,15 @@ jobs:
       - run: uv run pytest --cov --cov-report=term-missing
       - run: uv build
 
+  publiccode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: italia/publiccode-parser-action@v1
+        with:
+          publiccode: publiccode.yml
+          no-network: true
+
   benchmark:
     runs-on: ubuntu-latest
     steps:
