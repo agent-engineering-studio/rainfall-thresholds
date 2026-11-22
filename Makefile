@@ -1,6 +1,6 @@
-.PHONY: check lint format typecheck test build figures docs
+.PHONY: check lint format typecheck test bench build figures docs
 
-check: lint typecheck test
+check: lint typecheck test bench
 
 lint:
 	uv run ruff check
@@ -15,6 +15,9 @@ typecheck:
 
 test:
 	uv run pytest --cov --cov-report=term-missing
+
+bench:
+	uv run python -m benchmarks.run --check
 
 build:
 	uv build

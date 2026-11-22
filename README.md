@@ -38,6 +38,7 @@ those storms fall below it. The red star is the storm from the
 - [Thresholds for Italy](#thresholds-for-italy)
 - [Recipe: check a rain gauge](#recipe-check-a-rain-gauge)
 - [API at a glance](#api-at-a-glance)
+- [Benchmark](#benchmark)
 - [Good to know](#good-to-know)
 - [References](#references) · [Citing](#citing) · [Contributing](#contributing)
 
@@ -360,6 +361,20 @@ part of a simple monitoring loop.
 | `macroregion_of(region)` | function | region name → macroregion, or `None` |
 
 Everything is fully typed (`py.typed`) and checked with `mypy --strict`.
+
+## Benchmark
+
+A fixed set of known cases runs in CI: the storm of Melito di Porto Salvo on
+10 October 2026 on the DPC radar, six e-ITALICA landslides, and two cases
+built to test one rule each. Today the library passes **9 of 16** checks. It
+forgets a storm when a little drizzle follows it, it cannot take an hour that
+was not measured, and three landslides sit under T5, as T5 allows by
+construction. The details, and what is not there yet, are in
+[`benchmarks/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/benchmarks).
+
+```bash
+uv run python -m benchmarks.run
+```
 
 ## Good to know
 

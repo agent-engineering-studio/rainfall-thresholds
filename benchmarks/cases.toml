@@ -1,0 +1,198 @@
+# Known cases for rainfall-thresholds, with the answer we expect.
+#
+# A case is either an hourly series of rain at a point (`series`, a CSV in
+# series/) or a rainfall event already measured (`duration_h`, `total_mm`).
+# A method reads it and answers. Each check asks one question:
+#
+#   kind = "above"   is the event above the T5 threshold of `macroregion`?  expect = true | false
+#   kind = "event"   does the event read include this hour?                  hour = time
+#   kind = "dry"     is there no rainfall event at all?                      expect = true
+#
+# `as_of`: the series is cut there, as a monitoring loop would see it.
+#
+# status = "observed":    the rain was measured as written.
+# status = "constructed": made from observed hours, to test one rule. Says how.
+#
+# The expected answer is what happened, not what a threshold can do. A
+# landslide expects "above" even when it sits under T5: T5 leaves 5 % of the
+# landslides below it by construction, and the benchmark shows them.
+#
+# Radar data (c) Dipartimento della Protezione Civile, CC BY-SA 4.0.
+# e-ITALICA v4 (Brunetti et al. 2024, doi:10.5281/zenodo.14204473), CC BY 4.0.
+
+# --- Melito di Porto Salvo, 10 October 2026: observed radar rain ---------------
+
+[[case]]
+id = "melito-2026-10-10"
+title = "The Reggio Calabria storm at Melito di Porto Salvo, 10 October 2026"
+status = "observed"
+series = "melito-srt1.csv"
+macroregion = "southern"
+source = "Landslides in the Reggio Calabria area on 10/10/2026 (limen#243). DPC SRT1 at 15.78E 37.92N: 166 mm in 48 h; the «Merging» (CUM3) gives 148 mm in 00:00-06:00 UTC alone"
+
+[[case.check]]
+kind = "above"
+as_of = 2026-10-10T07:00:00Z
+expect = true
+
+[[case.check]]
+kind = "event"
+as_of = 2026-10-10T07:00:00Z
+hour = 2026-10-10T03:00:00Z
+
+[[case.check]]
+kind = "above"
+as_of = 2026-10-11T08:00:00Z
+expect = true
+
+[[case]]
+id = "bagaladi-2026-10-10"
+title = "The same storm at Bagaladi, 13 km north"
+status = "observed"
+series = "bagaladi-srt1.csv"
+macroregion = "southern"
+source = "DPC SRT1 at 15.81E 38.05N: 104 mm in 48 h"
+
+[[case.check]]
+kind = "above"
+as_of = 2026-10-10T07:00:00Z
+expect = true
+
+[[case.check]]
+kind = "above"
+as_of = 2026-10-11T08:00:00Z
+expect = true
+
+[[case]]
+id = "melito-dry-2026-10-11"
+title = "Melito the day after: nothing"
+status = "observed"
+series = "melito-srt1.csv"
+macroregion = "southern"
+source = "DPC SRT1 at 15.78E 37.92N, 11/10 08:00 to 12/10 00:00 UTC: 0 mm every hour. Read from 11/10 08:00"
+start = 2026-10-11T08:00:00Z
+
+[[case.check]]
+kind = "dry"
+as_of = 2026-10-12T00:00:00Z
+expect = true
+
+# --- Constructed from Melito: one rule each -------------------------------------
+
+[[case]]
+id = "melito-then-drizzle"
+title = "The storm, six dry hours, then 2.5 mm of drizzle"
+status = "constructed"
+series = "melito-then-drizzle.csv"
+macroregion = "southern"
+source = "Melito's hours 10/10 00:00-07:00 (109 mm on SRT1), then six dry hours and 1.0 + 1.5 mm. The storm should not be forgotten because it drizzled after"
+
+[[case.check]]
+kind = "above"
+as_of = 2026-10-10T15:00:00Z
+expect = true
+
+[[case.check]]
+kind = "event"
+as_of = 2026-10-10T15:00:00Z
+hour = 2026-10-10T03:00:00Z
+
+[[case]]
+id = "melito-gap"
+title = "The storm with three hours not measured"
+status = "constructed"
+series = "melito-gap.csv"
+macroregion = "southern"
+source = "Melito's hours 10/10 00:00-07:00 with 02:00-04:00 empty, as under a blind radar or a missing frame. A gap is not dry: the event must not be split, and what was measured is still above T5"
+
+[[case.check]]
+kind = "above"
+as_of = 2026-10-10T07:00:00Z
+expect = true
+
+[[case.check]]
+kind = "event"
+as_of = 2026-10-10T07:00:00Z
+hour = 2026-10-10T00:00:00Z
+
+# --- e-ITALICA: landslides with the rain of their gauge -------------------------
+# Picked by a rule, not by hand: in each macroregion, the landslide at the
+# median exceedance of T5 and the one at the 2nd percentile (under T5).
+
+[[case]]
+id = "ITA_0495"
+title = "San Costantino Calabro (VV), 17 January 2013"
+status = "observed"
+macroregion = "southern"
+duration_h = 63
+total_mm = 93.6
+source = "e-ITALICA v4 ITA_0495: debris flow; gauge 16.0606E 38.6056N; median of the south"
+
+[[case.check]]
+kind = "above"
+expect = true
+
+[[case]]
+id = "ITA_3878"
+title = "Ozieri (SS), 29 January 2009"
+status = "observed"
+macroregion = "southern"
+duration_h = 92
+total_mm = 36.0
+source = "e-ITALICA v4 ITA_3878: slide; gauge 8.9886E 40.6278N; 2nd percentile of the south, under T5"
+
+[[case.check]]
+kind = "above"
+expect = true
+
+[[case]]
+id = "ITA_4513"
+title = "San Marcello Piteglio (PT), 16 September 2006"
+status = "observed"
+macroregion = "central"
+duration_h = 49
+total_mm = 93.0
+source = "e-ITALICA v4 ITA_4513: rockfall; gauge 10.7513E 44.0997N; median of the centre"
+
+[[case.check]]
+kind = "above"
+expect = true
+
+[[case]]
+id = "ITA_5634"
+title = "Folignano (AP), 10 April 2014"
+status = "observed"
+macroregion = "central"
+duration_h = 5
+total_mm = 12.2
+source = "e-ITALICA v4 ITA_5634: slide; gauge 13.6456E 42.7572N; 2nd percentile of the centre, under T5"
+
+[[case.check]]
+kind = "above"
+expect = true
+
+[[case]]
+id = "ITA_6302"
+title = "Recco (GE), 26 December 2021"
+status = "observed"
+macroregion = "northern"
+duration_h = 53
+total_mm = 144.4
+source = "e-ITALICA v4 ITA_6302: slide; gauge 9.1699E 44.4437N; median of the north"
+
+[[case.check]]
+kind = "above"
+expect = true
+
+[[case]]
+id = "ITA_6343"
+title = "Genova, 27 November 2021"
+status = "observed"
+macroregion = "northern"
+duration_h = 11
+total_mm = 16.8
+source = "e-ITALICA v4 ITA_6343: slide; gauge 8.9726E 44.4237N; 2nd percentile of the north, under T5"
+
+[[case.check]]
+kind = "above"
+expect = true

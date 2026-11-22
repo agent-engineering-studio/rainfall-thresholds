@@ -1,0 +1,20 @@
+{
+  "v0.1": {
+    "melito-2026-10-10 · above as of 10/10 07:00": "pass",
+    "melito-2026-10-10 · event includes 10/10 03:00 as of 10/10 07:00": "pass",
+    "melito-2026-10-10 · above as of 11/10 08:00": "pass",
+    "bagaladi-2026-10-10 · above as of 10/10 07:00": "pass",
+    "bagaladi-2026-10-10 · above as of 11/10 08:00": "pass",
+    "melito-dry-2026-10-11 · dry as of 12/10 00:00": "pass",
+    "melito-then-drizzle · above as of 10/10 15:00": "fail",
+    "melito-then-drizzle · event includes 10/10 03:00 as of 10/10 15:00": "fail",
+    "melito-gap · above as of 10/10 07:00": "error",
+    "melito-gap · event includes 10/10 00:00 as of 10/10 07:00": "error",
+    "ITA_0495 · above": "pass",
+    "ITA_3878 · above": "fail",
+    "ITA_4513 · above": "pass",
+    "ITA_5634 · above": "fail",
+    "ITA_6302 · above": "pass",
+    "ITA_6343 · above": "fail"
+  }
+}
