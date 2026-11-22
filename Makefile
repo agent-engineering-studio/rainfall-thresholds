@@ -1,4 +1,5 @@
-.PHONY: check lint format typecheck test bench build figures docs
+.PHONY: check lint format typecheck test bench build figures docs notebooks \
+        docker-build docker-up docker-down docker-bench docker-python
 
 check: lint typecheck test bench
 
@@ -27,3 +28,25 @@ figures:
 
 docs:
 	uv run --group docs zensical build --strict
+
+# Run every notebook again and save the results (no network needed).
+notebooks:
+	cd notebooks && uv run --group examples jupyter nbconvert --to notebook --execute --inplace *.ipynb
+
+# Docker. Every target goes through `docker compose`, never a container by
+# name: the names come from the project (this folder, or COMPOSE_PROJECT_NAME).
+docker-build:
+	docker compose --profile tools build
+
+docker-up:
+	docker compose up --build
+
+docker-down:
+	docker compose --profile tools down --remove-orphans
+
+docker-bench:
+	docker compose run --rm --build bench
+
+docker-python:
+	docker compose run --rm --build python
+

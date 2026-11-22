@@ -40,6 +40,12 @@ dev = [
     "ruff>=0.8",
 ]
 
+examples = [
+    "jupyterlab>=4.2",
+    "nbconvert>=7.16",
+    "matplotlib>=3.9",
+]
+
 docs = [
     "zensical>=0.1.0",
     "mkdocstrings-python>=1.18",

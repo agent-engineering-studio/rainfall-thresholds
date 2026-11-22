@@ -6,6 +6,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `notebooks/`: three example notebooks, run without network and in CI
+  (#14).
+- `Dockerfile` and `compose.yaml`: the notebooks and the benchmark with
+  Docker alone, with no fixed container or image name; `make docker-up`,
+  `docker-bench`, `docker-down` (#14).
+
 ## [0.2.0] - 2026-11-22
 
 ### Added

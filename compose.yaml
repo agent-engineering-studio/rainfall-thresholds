@@ -1,0 +1,39 @@
+# rainfall-thresholds with nothing to install but Docker.
+#
+#   docker compose up                       the notebooks, on http://localhost:8888
+#   docker compose run --rm bench           the benchmark of known cases
+#   docker compose run --rm python          Python, with rainfall_thresholds to import
+#   docker compose down                     stop and remove the containers
+#
+#   RAINFALL_THRESHOLDS_PORT   the port of the notebooks (default 8888)
+#
+# No container_name and no image name on purpose: Compose names everything
+# <project>-<service>-N, where the project is this folder's name. Two copies,
+# or two projects, run side by side. Change it with COMPOSE_PROJECT_NAME or -p.
+# The notebooks listen on 127.0.0.1 only, with no token: they are for this
+# machine.
+
+x-library: &library
+  build: .
+
+services:
+  notebooks:
+    <<: *library
+    ports:
+      - "127.0.0.1:${RAINFALL_THRESHOLDS_PORT:-8888}:8888"
+    volumes:
+      - ./notebooks:/app/notebooks
+
+  bench:
+    <<: *library
+    profiles: [tools]
+    working_dir: /app
+    command: ["python", "-m", "benchmarks.run", "--check"]
+
+  python:
+    <<: *library
+    profiles: [tools]
+    working_dir: /app
+    command: ["python"]
+    stdin_open: true
+    tty: true

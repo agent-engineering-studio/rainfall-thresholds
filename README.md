@@ -49,6 +49,7 @@ those storms fall below it. The red star is the storm from the
 - [Recipe: check a rain gauge](#recipe-check-a-rain-gauge)
 - [API at a glance](#api-at-a-glance)
 - [Benchmark](#benchmark)
+- [Notebooks and Docker](#notebooks-and-docker)
 - [Good to know](#good-to-know)
 - [References](#references) · [Citing](#citing) · [Contributing](#contributing)
 
@@ -406,6 +407,22 @@ construction. The details, and what is not there yet, are in
 ```bash
 uv run python -m benchmarks.run
 ```
+
+## Notebooks and Docker
+
+Three [example notebooks](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks)
+need no network: the Italian thresholds over the e-ITALICA landslides, the
+storm of Melito on the DPC radar, and fitting your own threshold. Open them
+with uv, or with Docker alone:
+
+```bash
+uv run --group examples jupyter lab notebooks/
+docker compose up              # http://localhost:8888
+make docker-bench              # the benchmark, in a container
+```
+
+The compose file gives no fixed name to containers or images: Compose names
+them after the project, so two copies run side by side.
 
 ## Good to know
 
