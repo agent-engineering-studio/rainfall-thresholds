@@ -7,6 +7,16 @@ series into rainfall events, compare them with a threshold, and fit your own
 threshold from past landslides. It ships ready-to-use thresholds for Italy,
 fitted on 5,974 real landslides.
 
+> **A threshold exceeded is not an alert.** It says the rain is like the rain
+> that triggered landslides before. The official alert in Italy is the
+> criticality bulletin of the
+> [Dipartimento della Protezione Civile](https://rischi.protezionecivile.gov.it/it/meteo-idro/allertamento/).
+
+**What it does not do.** It does not fetch rain: you bring the series, from a
+gauge, a radar or a model. It does not say where a landslide will happen, and
+it does not issue warnings. It does not know whether your radar can see:
+mark the hours it could not measure as `None`.
+
 [![ci](https://github.com/agent-engineering-studio/rainfall-thresholds/actions/workflows/ci.yml/badge.svg)](https://github.com/agent-engineering-studio/rainfall-thresholds/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/rainfall-thresholds)](https://pypi.org/project/rainfall-thresholds/)
 [![Python](https://img.shields.io/pypi/pyversions/rainfall-thresholds)](https://pypi.org/project/rainfall-thresholds/)
@@ -74,7 +84,7 @@ with no dependencies.
 ```mermaid
 flowchart LR
     A["🌧️ Hourly rain<br/>(timestamp, mm)"] -->|reconstruct_events| B["Rainfall events<br/>duration · total · intensity"]
-    B -->|latest_event| C["Current event"]
+    B -->|strongest_event| C["Event that matters"]
     C -->|"threshold.exceedance()"| D{"Above the<br/>threshold?"}
     D -->|"> 0"| E["⚠️ Conditions like<br/>past landslides"]
     D -->|"< 0"| F["✅ Below the line"]
@@ -86,7 +96,7 @@ flowchart LR
 
 | Step | What you have | What you call | What you get |
 |---|---|---|---|
-| 1 | an hourly rain series | `reconstruct_events`, `latest_event` | rainfall events, each with duration, total and intensity |
+| 1 | an hourly rain series | `reconstruct_events`, `strongest_event` | rainfall events, each with duration, total and intensity |
 | 2 | an event and a threshold | `PowerLawThreshold.intensity` / `.cumulated` / `.exceedance` | how much rain the threshold needs, and how far above or below it you are |
 | 3 | a catalogue of landslide-triggering events | `fit_threshold` | your own threshold |
 
@@ -106,19 +116,20 @@ landslide weather?
 ```python
 from datetime import UTC, datetime, timedelta
 
-from rainfall_thresholds import ITALICA_T5, latest_event, macroregion_of, reconstruct_events
+from rainfall_thresholds import ITALICA_T5, macroregion_of, reconstruct_events, strongest_event
 
 # Hourly rain from a gauge, in mm
 start = datetime(2026, 10, 10, tzinfo=UTC)
 hourly_mm = [0, 2, 8, 15, 22, 18, 9, 4, 0, 1, 3, 0, 0]
 series = [(start + timedelta(hours=h), mm) for h, mm in enumerate(hourly_mm)]
 
-# 1. Cut the series into rainfall events and take the last one
-event = latest_event(reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0))
-assert event is not None
-
-# 2. Pick the threshold for the region
+# 1. Pick the threshold for the region
 threshold = ITALICA_T5[macroregion_of("Calabria") or "italy"]  # "southern"
+
+# 2. Cut the series into rainfall events and take the one that matters
+events = reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0)
+event = strongest_event(events, threshold)
+assert event is not None
 
 # 3. Compare
 print(f"{event.total_mm:.0f} mm in {event.duration_hours:.0f} h = {event.intensity_mm_h:.1f} mm/h")
@@ -155,19 +166,33 @@ inside a storm stay in the same event.
 </picture>
 
 ```python
+threshold = ITALICA_T5["southern"]
 events = reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0)
 for e in events:
     print(e.start, e.end, e.duration_hours, e.total_mm, e.intensity_mm_h)
 
-current = latest_event(events)  # the event that ended last, or None
+current = strongest_event(events, threshold)  # the event furthest above the threshold
 ```
 
-Each event is a frozen `RainfallEvent` with `start`, `end`,
-`duration_hours`, `total_mm` and the `intensity_mm_h` property.
+**Which event?** A storm, six dry hours and then a little drizzle are two
+events. `latest_event` gives the drizzle; `strongest_event` gives the storm.
+For monitoring, pass the events of the window you watch (for example the last
+48 hours) to `strongest_event`, so an old storm does not stay forever.
 
-> **Tip.** The series should be hourly and without gaps: dry hours count
-> only if they are in the series as `0`. If your gauge skips dry hours, fill
-> them in before calling `reconstruct_events`.
+Each event is a frozen `RainfallEvent` with `start`, `end`,
+`duration_hours`, `total_mm`, `unmeasured_hours`, `source` and the
+`intensity_mm_h` and `fully_measured` properties.
+
+> **Not measured is not dry.** The series should be hourly and without gaps:
+> a dry hour is `0`, an hour that was not measured (a missing frame, a gauge
+> that did not report, a place the radar cannot see) is `None`. A `None` hour
+> adds no rain and does not count towards the dry break, so a gap never splits
+> an event. The event counts it in `unmeasured_hours`, and its total is then a
+> lower bound. If your gauge skips dry hours, fill them in with `0`.
+
+Give the events a `source` (`reconstruct_events(..., source="DPC SRT1")`):
+the Italian thresholds are fitted on rain gauges, and radar rain is not gauge
+rain. The label is carried, never interpreted.
 
 ### 2. Comparing an event with a threshold
 
@@ -319,13 +344,17 @@ Read an hourly CSV, find the current rainfall event and see where it stands:
 import csv
 from datetime import datetime
 
-from rainfall_thresholds import ITALICA_T5, latest_event, macroregion_of, reconstruct_events
+from rainfall_thresholds import ITALICA_T5, macroregion_of, reconstruct_events, strongest_event
 
-with open("gauge.csv", encoding="utf-8") as f:  # columns: time, rain_mm
-    series = [(datetime.fromisoformat(r["time"]), float(r["rain_mm"])) for r in csv.DictReader(f)]
+with open("gauge.csv", encoding="utf-8") as f:  # columns: time, rain_mm (empty: not measured)
+    series = [
+        (datetime.fromisoformat(r["time"]), float(r["rain_mm"]) if r["rain_mm"] else None)
+        for r in csv.DictReader(f)
+    ]
 
-event = latest_event(reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0))
 threshold = ITALICA_T5[macroregion_of("Liguria") or "italy"]
+events = reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0, source="rain gauge")
+event = strongest_event(events, threshold)
 
 if event is None:
     print("No rain event in the window")
@@ -342,17 +371,18 @@ else:
 10 Oct 01:00 → 07:00: 78 mm (T5 needs 16 mm in 7 h) → +0.67
 ```
 
-Run it every hour on the last few days of data and you have the rainfall
-part of a simple monitoring loop.
+Run it every hour on the last two or three days of data and you have the
+rainfall part of a simple monitoring loop: a number to watch, not an alert.
 
 ## API at a glance
 
 | Name | Kind | What it is |
 |---|---|---|
 | `PowerLawThreshold(alpha, beta)` | frozen dataclass | `I = α·D^(-β)`, with `.intensity(D)`, `.cumulated(D)`, `.exceedance(I, D)` |
-| `reconstruct_events(series, *, no_rain_break_hours, min_event_mm)` | function | hourly `(datetime, mm)` pairs → `list[RainfallEvent]` |
+| `reconstruct_events(series, *, no_rain_break_hours, min_event_mm, source=None)` | function | hourly `(datetime, mm or None)` pairs → `list[RainfallEvent]`; `None` is not measured |
+| `strongest_event(events, threshold)` | function | the event furthest above the threshold, or `None` |
 | `latest_event(events)` | function | the event that ended last, or `None` |
-| `RainfallEvent` | frozen dataclass | `start`, `end`, `duration_hours`, `total_mm`, `.intensity_mm_h` |
+| `RainfallEvent` | frozen dataclass | `start`, `end`, `duration_hours`, `total_mm`, `unmeasured_hours`, `source`, `.intensity_mm_h`, `.fully_measured` |
 | `fit_threshold(events, *, percentile=5.0)` | function | `(D, I)` pairs → `ThresholdFit` |
 | `ThresholdFit` | frozen dataclass | `threshold`, `central`, `percentile`, `n_events` |
 | `percentile_of(values, percentile)` | function | linear-interpolation percentile, same as NumPy's default |
@@ -366,9 +396,10 @@ Everything is fully typed (`py.typed`) and checked with `mypy --strict`.
 
 A fixed set of known cases runs in CI: the storm of Melito di Porto Salvo on
 10 October 2026 on the DPC radar, six e-ITALICA landslides, and two cases
-built to test one rule each. Today the library passes **9 of 16** checks. It
-forgets a storm when a little drizzle follows it, it cannot take an hour that
-was not measured, and three landslides sit under T5, as T5 allows by
+built to test one rule each. 0.1.0 passed **9 of 16** checks: it forgot a
+storm when a little drizzle followed it, and could not take an hour that was
+not measured. With `strongest_event` and `None` the library passes **13 of
+16**. The three it misses are landslides under T5, as T5 allows by
 construction. The details, and what is not there yet, are in
 [`benchmarks/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/benchmarks).
 
