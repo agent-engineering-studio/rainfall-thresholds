@@ -20,6 +20,7 @@ nav = [
     { "Rainfall events" = "api/events.md" },
     { "Fitting" = "api/fit.md" },
     { "Italy (T5 thresholds)" = "api/italy.md" },
+    { "Measuring a threshold" = "api/measure.md" },
   ] },
   { "Changelog" = "changelog.md" },
   { "Contributing" = "contributing.md" },

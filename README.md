@@ -45,6 +45,7 @@ those storms fall below it. The red star is the storm from the
   - [1. From hourly rain to rainfall events](#1-from-hourly-rain-to-rainfall-events)
   - [2. Comparing an event with a threshold](#2-comparing-an-event-with-a-threshold)
   - [3. Fitting your own threshold](#3-fitting-your-own-threshold)
+  - [4. Measuring what it costs](#4-measuring-what-it-costs)
 - [Thresholds for Italy](#thresholds-for-italy)
 - [Recipe: check a rain gauge](#recipe-check-a-rain-gauge)
 - [API at a glance](#api-at-a-glance)
@@ -294,6 +295,50 @@ fitted to a kernel density of the residuals; this package takes it straight
 from the residuals. The two agree when the residuals are close to normal,
 and the empirical one makes no assumption about their shape.
 
+### 4. Measuring what it costs
+
+T5 catches 95 % of past landslides by construction. What it does not say is
+how often it is exceeded when nothing happens. The `measure` functions answer
+both on the same scale, for any score that grows with danger (an exceedance,
+a 24-hour total, a probability):
+
+```python
+from rainfall_thresholds import auc, skill, skill_at_budget
+
+# For each landslide, the highest score in the hours before it.
+landslides = [0.62, 0.31, 0.05, -0.08, 0.44]
+# For each unit you could alert on (cell-hours, municipality-days...).
+ordinary = [-0.9, -0.4, -0.2, 0.1, -0.6, -0.3, 0.2, -1.1, -0.5, -0.7]
+
+s = skill(landslides, ordinary, cutoff=0.0)  # above the threshold = alert
+print(f"caught {s.caught} of {s.landslides}, {s.alert_share:.0%} of units on alert")
+print(f"discrimination {s.discrimination:.1f}, {s.alerts_per_caught:.1f} alerts per landslide")
+
+fair = skill_at_budget(landslides, ordinary, budget=0.10)  # 10 % of units on alert
+print(f"at a 10 % budget: caught {fair.caught} of {fair.landslides}")
+print(f"AUC {auc(landslides, ordinary):.2f}")
+```
+
+```
+caught 4 of 5, 20% of units on alert
+discrimination 4.0, 0.5 alerts per landslide
+at a 10 % budget: caught 3 of 5
+AUC 0.92
+```
+
+To compare two scores, compare them **at the same budget**: counting at a
+fixed level rewards the score that alerts more. `None` is a score that was
+not measured: it is left out and counted in `unmeasured`, never read as
+zero. The definitions are those of Limen's backtests, and on the same inputs
+the results are identical.
+
+What this gives on real data was measured in Limen
+([limen#243](https://github.com/agent-engineering-studio/limen/issues/243)),
+with the national curve on model rain (ERA5): 40.7 % of the e-ITALICA
+landslides above the threshold against 3.0 % of ordinary moments, and 0 of
+286 landslides caught in the regions held out. A threshold fitted on rain
+gauges and applied to other rain is not the same threshold.
+
 ## Thresholds for Italy
 
 `ITALICA_T5` holds four T5 thresholds fitted with `fit_threshold(percentile=5)`
@@ -387,6 +432,11 @@ rainfall part of a simple monitoring loop: a number to watch, not an alert.
 | `fit_threshold(events, *, percentile=5.0)` | function | `(D, I)` pairs → `ThresholdFit` |
 | `ThresholdFit` | frozen dataclass | `threshold`, `central`, `percentile`, `n_events` |
 | `percentile_of(values, percentile)` | function | linear-interpolation percentile, same as NumPy's default |
+| `skill(landslides, ordinary, cutoff)` | function | landslides caught and units on alert at a cutoff → `Skill` |
+| `skill_at_budget(landslides, ordinary, budget, *, floor=None)` | function | the same at the cutoff that puts `budget` of the units on alert |
+| `cutoff_at_budget(ordinary, budget, *, floor=None)` | function | that cutoff |
+| `Skill` | frozen dataclass | `caught`, `landslides`, `alerts`, `ordinary`, `unmeasured`; `.hit_rate`, `.alert_share`, `.discrimination`, `.alerts_per_caught` |
+| `auc(landslides, ordinary)` | function | Mann-Whitney AUC, ties count half |
 | `ITALICA_T5` | read-only mapping | `"italy"`, `"northern"`, `"central"`, `"southern"` → `PowerLawThreshold` |
 | `MACROREGIONS` | read-only mapping | macroregion → set of region names (e-ITALICA spelling) |
 | `macroregion_of(region)` | function | region name → macroregion, or `None` |
