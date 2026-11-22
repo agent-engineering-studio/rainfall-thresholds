@@ -40,3 +40,17 @@ jobs:
           enable-cache: true
       - run: uv sync --locked
       - run: uv run python -m benchmarks.run --check
+
+  notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - run: uv sync --locked --group examples
+      - name: Every notebook runs
+        working-directory: notebooks
+        run: uv run --group examples jupyter nbconvert --to notebook --execute --output-dir /tmp/run *.ipynb
