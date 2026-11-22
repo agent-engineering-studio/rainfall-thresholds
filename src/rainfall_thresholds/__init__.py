@@ -2,7 +2,12 @@
 
 from importlib.metadata import version
 
-from rainfall_thresholds.events import RainfallEvent, latest_event, reconstruct_events
+from rainfall_thresholds.events import (
+    RainfallEvent,
+    latest_event,
+    reconstruct_events,
+    strongest_event,
+)
 from rainfall_thresholds.fit import ThresholdFit, fit_threshold, percentile_of
 from rainfall_thresholds.italy import ITALICA_T5, MACROREGIONS, macroregion_of
 from rainfall_thresholds.threshold import PowerLawThreshold
@@ -21,4 +26,5 @@ __all__ = [
     "macroregion_of",
     "percentile_of",
     "reconstruct_events",
+    "strongest_event",
 ]

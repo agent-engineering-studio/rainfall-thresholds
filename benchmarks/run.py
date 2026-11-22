@@ -22,18 +22,26 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Literal
 
-from rainfall_thresholds import ITALICA_T5, RainfallEvent, latest_event, reconstruct_events
+from rainfall_thresholds import (
+    ITALICA_T5,
+    PowerLawThreshold,
+    RainfallEvent,
+    latest_event,
+    reconstruct_events,
+    strongest_event,
+)
 
 HERE = Path(__file__).parent
 RESULTS = HERE / "results.json"
 
 Outcome = Literal["pass", "fail", "error"]
 Series = list[tuple[datetime, float | None]]
-#: A method: an hourly series (``None`` = not measured) -> the event it reads, or None.
-Method = Callable[[Series], RainfallEvent | None]
+#: A method: an hourly series (``None`` = not measured) and the threshold of the
+#: place -> the event it compares with the threshold, or None.
+Method = Callable[[Series, PowerLawThreshold], RainfallEvent | None]
 
 
-def v0_1(series: Series) -> RainfallEvent | None:
+def v0_1(series: Series, _threshold: PowerLawThreshold) -> RainfallEvent | None:
     """What 0.1.0 does, and Limen with it: the last event, gaps not allowed."""
     if any(mm is None for _, mm in series):
         raise ValueError("a series with hours not measured")
@@ -41,7 +49,13 @@ def v0_1(series: Series) -> RainfallEvent | None:
     return latest_event(reconstruct_events(dense, no_rain_break_hours=6, min_event_mm=2.0))
 
 
-METHODS: dict[str, Method] = {"v0.1": v0_1}
+def v0_2(series: Series, threshold: PowerLawThreshold) -> RainfallEvent | None:
+    """Hours not measured allowed, and the strongest event of the window (#6)."""
+    events = reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0)
+    return strongest_event(events, threshold)
+
+
+METHODS: dict[str, Method] = {"v0.1": v0_1, "v0.2": v0_2}
 
 
 @dataclass(frozen=True, slots=True)
@@ -86,7 +100,7 @@ def judge(case: dict[str, Any], check: dict[str, Any], method: Method) -> Result
                 for s in series
                 if (start is None or s[0] >= start) and (end is None or s[0] <= end)
             ]
-            event = method(series)
+            event = method(series, threshold)
         else:
             d = float(case["duration_h"])
             event = RainfallEvent(datetime.min, datetime.min, d, float(case["total_mm"]))

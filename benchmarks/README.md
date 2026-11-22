@@ -42,21 +42,23 @@ say how.
 ## Today's score
 
 `v0.1` is what 0.1.0 does, and what Limen does with it: `reconstruct_events`
-with a 6-hour dry break and 2 mm minimum, then `latest_event`.
+with a 6-hour dry break and 2 mm minimum, then `latest_event`. `v0.2` (#6)
+takes hours not measured (`None`) and the strongest event of the window,
+`strongest_event`.
 
-| Check | v0.1 |
-|---|---|
-| Melito and Bagaladi above T5 (4 checks) | ✓ ✓ ✓ ✓ |
-| Melito's event includes the peak hour | ✓ |
-| The day after: no event | ✓ |
-| Storm then drizzle: above T5 | ✗ (−0.65: it reads the drizzle) |
-| Storm then drizzle: event includes the storm | ✗ |
-| Storm with a gap (2 checks) | ! (cannot take hours not measured) |
-| e-ITALICA, median landslides (3) | ✓ ✓ ✓ |
-| e-ITALICA, 2nd-percentile landslides (3) | ✗ ✗ ✗ (under T5, by construction) |
-| **Total** | **9 of 16** |
+| Check | v0.1 | v0.2 |
+|---|---|---|
+| Melito and Bagaladi above T5 (4 checks) | ✓ ✓ ✓ ✓ | ✓ ✓ ✓ ✓ |
+| Melito's event includes the peak hour | ✓ | ✓ |
+| The day after: no event | ✓ | ✓ |
+| Storm then drizzle: above T5 | ✗ (−0.65: it reads the drizzle) | ✓ (+0.78) |
+| Storm then drizzle: event includes the storm | ✗ | ✓ |
+| Storm with a gap (2 checks) | ! (cannot take hours not measured) | ✓ ✓ (59.6 mm measured, +0.51) |
+| e-ITALICA, median landslides (3) | ✓ ✓ ✓ | ✓ ✓ ✓ |
+| e-ITALICA, 2nd-percentile landslides (3) | ✗ ✗ ✗ | ✗ ✗ ✗ (under T5, by construction) |
+| **Total** | **9 of 16** | **13 of 16** |
 
-On the real Melito series `v0.1` does well: the rain from the afternoon of the
+On the real Melito series both do well: the rain from the afternoon of the
 9th to the night of the 10th is one event (166 mm in 35 h, +0.73 decades), so
 the drizzle fault does not show there. It shows as soon as six dry hours
 separate the storm from a little more rain.

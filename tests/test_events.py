@@ -4,7 +4,13 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from rainfall_thresholds import RainfallEvent, latest_event, reconstruct_events
+from rainfall_thresholds import (
+    ITALICA_T5,
+    RainfallEvent,
+    latest_event,
+    reconstruct_events,
+    strongest_event,
+)
 
 T0 = datetime(2026, 6, 1, tzinfo=UTC)
 
@@ -79,3 +85,59 @@ def test_latest_event_is_the_one_that_ended_last() -> None:
     assert latest_event(got) is got[1]
     assert latest_event(reversed(got)) is got[1]
     assert latest_event([]) is None
+
+
+# --- Hours not measured -----------------------------------------------------------
+
+
+def gappy(values: list[float | None]) -> list[RainfallEvent]:
+    series = [(T0 + timedelta(hours=i), v) for i, v in enumerate(values)]
+    return reconstruct_events(series, no_rain_break_hours=6, min_event_mm=2.0)
+
+
+def test_an_hour_not_measured_is_not_dry() -> None:
+    (only,) = gappy([5, None, None, None, None, None, None, 5])
+    assert only.total_mm == 10.0
+    assert only.duration_hours == 8.0
+    assert only.unmeasured_hours == 6
+    assert not only.fully_measured
+
+
+def test_measured_dry_hours_still_break_around_a_gap() -> None:
+    # 3 dry + 1 not measured + 3 dry: six measured dry hours close the event.
+    assert len(gappy([5, 0, 0, 0, None, 0, 0, 0, 5])) == 2
+
+
+def test_gaps_outside_the_event_are_not_counted() -> None:
+    (only,) = gappy([None, None, 4, 0, None, *[0] * 6])
+    assert only.unmeasured_hours == 0
+    assert only.fully_measured
+
+
+def test_a_series_never_measured_has_no_events() -> None:
+    assert gappy([None, None, None]) == []
+
+
+def test_the_source_is_carried() -> None:
+    (only,) = reconstruct_events(
+        hourly([0, 4, 3]), no_rain_break_hours=6, min_event_mm=2.0, source="DPC SRT1"
+    )
+    assert only.source == "DPC SRT1"
+    assert events([4])[0].source is None
+
+
+# --- Which event --------------------------------------------------------------------
+
+
+def test_the_strongest_event_is_the_storm_not_the_drizzle_after_it() -> None:
+    storm_then_drizzle = events([20, 30, 40, 20, *[0] * 6, 1.0, 1.5])
+    assert len(storm_then_drizzle) == 2
+    threshold = ITALICA_T5["southern"]
+    assert latest_event(storm_then_drizzle) is storm_then_drizzle[1]
+    assert strongest_event(storm_then_drizzle, threshold) is storm_then_drizzle[0]
+    assert strongest_event([], threshold) is None
+
+
+def test_ties_go_to_the_event_that_ended_last() -> None:
+    same = events([4, *[0] * 6, 4])
+    assert strongest_event(same, ITALICA_T5["italy"]) is same[1]

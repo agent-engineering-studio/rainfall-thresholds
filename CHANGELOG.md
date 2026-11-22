@@ -12,6 +12,18 @@ All notable changes to this project are documented here. The format follows
   `--check` (#5). Melito di Porto Salvo and Bagaladi on 10 October 2026 (DPC
   radar, SRT1), six e-ITALICA landslides, and two constructed cases. 0.1.0
   passes 9 of 16 checks.
+- `strongest_event(events, threshold)`: the event furthest above the
+  threshold. `latest_event` can pick a little drizzle after a storm and
+  forget the storm (#6).
+- Hours not measured: `reconstruct_events` takes `None` for an hour that was
+  not measured. It adds no rain and does not count towards the dry break, so
+  a gap never splits an event; `RainfallEvent.unmeasured_hours` and
+  `.fully_measured` say so (#6).
+- `source=` on `reconstruct_events`, carried as `RainfallEvent.source` (#6).
+- A test that fails if the package imports dpc_radar, ispra_idrogeo or limen.
+- README: a threshold exceeded is not an alert; what the library does not do.
+
+With these the benchmark goes from 9 to 13 of 16.
 
 ## [0.1.0] - 2026-11-02
 
