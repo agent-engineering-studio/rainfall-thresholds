@@ -11,10 +11,14 @@ edit_uri = "edit/main/docs/"
 copyright = "Code Apache-2.0. Italian thresholds fitted on e-ITALICA v4 (Brunetti et al. 2024, doi:10.5281/zenodo.14204473)."
 exclude_docs = """
 make_figures.py
+make_explainer_data.py
 """
+extra_javascript = ["javascripts/explainer.js"]
+extra_css = ["stylesheets/explainer.css"]
 
 nav = [
   { "Home" = "index.md" },
+  { "Try it" = "explainer.md" },
   { "API reference" = [
     { "Threshold" = "api/threshold.md" },
     { "Rainfall events" = "api/events.md" },

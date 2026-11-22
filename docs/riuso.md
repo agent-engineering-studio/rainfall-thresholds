@@ -57,6 +57,24 @@ Le istruzioni sono in
 - **La pubblicazione.** La pagina ascolta solo su `127.0.0.1`: per metterla sul
   sito va dietro il proxy dell'ente.
 
+## La spiegazione, per tutti
+
+[Try it](explainer.md) è una pagina interattiva, senza server: si sceglie una
+regione, una durata e la pioggia caduta, e si vede dove cade rispetto alla
+soglia italiana e alle frane del passato. Serve a spiegare che cos'è una
+soglia, per esempio a una scuola o in un incontro pubblico. La pagina è in
+inglese, come il resto della documentazione.
+
+## Il Catalogo di Developers Italia
+
+Il file [`publiccode.yml`](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/publiccode.yml)
+descrive il progetto per il
+[Catalogo del software](https://developers.italia.it/it/software) di
+Developers Italia, in italiano e in inglese, ed è controllato a ogni modifica
+con `italia/publiccode-parser-action`. Il campo `codiceIPA` resta vuoto finché
+il software non appartiene a una pubblica amministrazione: un ente che lo
+adotta può chiederne l'inserimento nel Catalogo.
+
 ## Fonti
 
 - e-ITALICA v4, Brunetti M.T. et al. (2024),

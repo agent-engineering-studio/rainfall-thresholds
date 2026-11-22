@@ -15,6 +15,13 @@ All notable changes to this project are documented here. The format follows
   gauge ("non misurato" until then); exports it as YAML. `docker compose up
   taratura`. Not a warning system, no live rain (#10).
 - `docs/riuso.md`: for a public body, in Italian (#10).
+- "Try it", an interactive intensity-duration plane on the docs site: a
+  region, a duration and a rain total against the Italian threshold and the
+  e-ITALICA landslides, in the browser, no backend. Its data are written by
+  `docs/make_explainer_data.py` from the library, and a test fails when they
+  are stale (#10).
+- `publiccode.yml`, for the software catalogue of Developers Italia, checked
+  in CI (#10).
 
 ## [0.3.0] - 2026-11-22
 

@@ -490,6 +490,10 @@ reads no live rain. `docker compose up taratura`, then http://localhost:3001.
 [Riuso nella PA](https://agentengineering.it/rainfall-thresholds/riuso/)
 says, in Italian, what it does and what stays with the body.
 
+To explain what a threshold is, the docs site has
+[Try it](https://agentengineering.it/rainfall-thresholds/explainer/): an
+interactive intensity-duration plane that runs in the browser.
+
 ## For assistants and agents
 
 A language model may word the numbers; it should never compute them. The
