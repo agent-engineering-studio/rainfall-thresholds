@@ -5,7 +5,13 @@
 #   docker compose run --rm python          Python, with rainfall_thresholds to import
 #   docker compose down                     stop and remove the containers
 #
+#   docker compose up taratura              the calibration bench, on http://localhost:3001
+#
 #   RAINFALL_THRESHOLDS_PORT   the port of the notebooks (default 8888)
+#   TARATURA_PORT              the port of the calibration bench (default 3001)
+#   TARATURA_ENTE, TARATURA_REGIONE
+#                              the name of the public body in the header, and the
+#                              region selected when the page opens (see app/README.md)
 #
 # No container_name and no image name on purpose: Compose names everything
 # <project>-<service>-N, where the project is this folder's name. Two copies,
@@ -37,3 +43,14 @@ services:
     command: ["python"]
     stdin_open: true
     tty: true
+
+  # The calibration bench for a public body (app/): the API and its page.
+  taratura:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    ports:
+      - "127.0.0.1:${TARATURA_PORT:-3001}:8000"
+    environment:
+      TARATURA_ENTE: ${TARATURA_ENTE:-}
+      TARATURA_REGIONE: ${TARATURA_REGIONE:-}

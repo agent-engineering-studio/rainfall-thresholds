@@ -53,6 +53,8 @@ NOTES = """\
 DESCRIPTIONS = {
     "index.md": "the guide: the idea, how it works, quick start, events, comparing, fitting, "
     "measuring, the thresholds for Italy, benchmark, notebooks and Docker, API at a glance",
+    "riuso.md": "in Italian, for a public body: the calibration bench, what it does not do, "
+    "what stays with the body",
     "changelog.md": "what changed in each release",
     "contributing.md": "how to contribute",
 }

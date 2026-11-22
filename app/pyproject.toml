@@ -1,0 +1,28 @@
+[project]
+name = "rainfall-thresholds-taratura"
+version = "0.1.0"
+description = "Il banco di taratura di rainfall-thresholds: una soglia per le frane, tarata e misurata dall'ente"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+dependencies = [
+    "rainfall-thresholds",
+    "starlette>=0.40",
+    "uvicorn>=0.30",
+]
+
+[tool.uv.sources]
+# The app follows the library of this repository, not the one on PyPI.
+rainfall-thresholds = { path = "..", editable = true }
+
+[dependency-groups]
+dev = ["pytest>=8.3", "httpx>=0.27"]
+
+[build-system]
+requires = ["uv_build>=0.13.6,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "taratura"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
