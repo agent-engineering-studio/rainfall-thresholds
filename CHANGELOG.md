@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-22
+
 ### Added
 
 - `measure`: `skill`, `skill_at_budget`, `cutoff_at_budget`, `Skill` and
