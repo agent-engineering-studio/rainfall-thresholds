@@ -11,3 +11,6 @@ build
 site
 docs
 **/.ipynb_checkpoints
+**/node_modules
+app/.venv
+app/static/vendor

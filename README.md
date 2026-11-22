@@ -51,6 +51,7 @@ those storms fall below it. The red star is the storm from the
 - [API at a glance](#api-at-a-glance)
 - [Benchmark](#benchmark)
 - [Notebooks and Docker](#notebooks-and-docker)
+- [A calibration bench for public bodies](#a-calibration-bench-for-public-bodies)
 - [For assistants and agents](#for-assistants-and-agents)
 - [Good to know](#good-to-know)
 - [References](#references) · [Citing](#citing) · [Contributing](#contributing)
@@ -477,6 +478,17 @@ make docker-bench              # the benchmark, in a container
 
 The compose file gives no fixed name to containers or images: Compose names
 them after the project, so two copies run side by side.
+
+## A calibration bench for public bodies
+
+[`app/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/app)
+is a page in Italian, with Bootstrap Italia, for a public body: it opens on
+the e-ITALICA landslides of its region, fits a threshold on the ones that
+matter, compares it with the national one, measures its cost in false alarms
+on the body's own rain gauge, and exports it. It is not a warning system and
+reads no live rain. `docker compose up taratura`, then http://localhost:3001.
+[Riuso nella PA](https://agentengineering.it/rainfall-thresholds/riuso/)
+says, in Italian, what it does and what stays with the body.
 
 ## For assistants and agents
 

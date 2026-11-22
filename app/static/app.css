@@ -1,0 +1,19 @@
+/* Titillium Web, served with the page (no CDN). */
+@font-face { font-family: "Titillium Web"; font-weight: 400; font-display: swap;
+  src: url("vendor/bootstrap-italia/fonts/Titillium_Web/titillium-web-v10-latin-ext_latin-regular.woff2") format("woff2"); }
+@font-face { font-family: "Titillium Web"; font-weight: 600; font-display: swap;
+  src: url("vendor/bootstrap-italia/fonts/Titillium_Web/titillium-web-v10-latin-ext_latin-600.woff2") format("woff2"); }
+@font-face { font-family: "Titillium Web"; font-weight: 700; font-display: swap;
+  src: url("vendor/bootstrap-italia/fonts/Titillium_Web/titillium-web-v10-latin-ext_latin-700.woff2") format("woff2"); }
+
+#grafico { width: 100%; max-width: 760px; height: auto; font-size: 12px; }
+#grafico .griglia { stroke: #d9dadb; stroke-width: 1; }
+#grafico .punto { fill: #5d7083; fill-opacity: 0.35; }
+#grafico .soglia { fill: none; stroke: #0066cc; stroke-width: 3; }
+#grafico .riferimento { fill: none; stroke: #008758; stroke-width: 2; stroke-dasharray: 6 4; }
+#grafico text { fill: #33485c; }
+
+/* The header: the name of the body, readable on the blue of Bootstrap Italia. */
+.it-header-center-wrapper { background: #0066cc; }
+.it-header-center-wrapper .it-brand-title { color: #fff; font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+.it-header-center-wrapper .it-brand-tagline { color: #fff; font-size: 1rem; }

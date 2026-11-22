@@ -1,5 +1,5 @@
 .PHONY: check lint format typecheck test bench build figures docs notebooks \
-        docker-build docker-up docker-down docker-bench docker-python
+        docker-build docker-up docker-down docker-bench docker-python app app-test app-up
 
 check: lint typecheck test bench
 
@@ -51,4 +51,15 @@ docker-bench:
 
 docker-python:
 	docker compose run --rm --build python
+
+# The calibration bench (app/): locally with uv and npm, or with Docker.
+app:
+	sh app/vendor.sh
+	cd app && uv run uvicorn taratura.api:app --reload
+
+app-test:
+	cd app && uv run pytest
+
+app-up:
+	docker compose up --build taratura
 

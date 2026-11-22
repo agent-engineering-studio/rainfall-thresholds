@@ -6,6 +6,16 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `app/`: a calibration bench for public bodies, in Italian, with Bootstrap
+  Italia and no CDN. It fits a threshold on e-ITALICA filtered by region,
+  month and landslide type, or on the body's own landslides; compares it with
+  the national one; measures its cost in false alarms on the body's rain
+  gauge ("non misurato" until then); exports it as YAML. `docker compose up
+  taratura`. Not a warning system, no live rain (#10).
+- `docs/riuso.md`: for a public body, in Italian (#10).
+
 ## [0.3.0] - 2026-11-22
 
 ### Added

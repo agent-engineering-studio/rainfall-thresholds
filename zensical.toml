@@ -25,6 +25,7 @@ nav = [
     { "Checking a text" = "api/check.md" },
     { "MCP server" = "api/mcp.md" },
   ] },
+  { "Riuso nella PA" = "riuso.md" },
   { "Changelog" = "changelog.md" },
   { "Contributing" = "contributing.md" },
 ]

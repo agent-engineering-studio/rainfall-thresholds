@@ -55,3 +55,19 @@ jobs:
       - name: Every notebook runs
         working-directory: notebooks
         run: uv run --group examples jupyter nbconvert --to notebook --execute --output-dir /tmp/run *.ipynb
+
+  app:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - run: uv sync --locked
+      - run: uv run pytest
+      - run: uv run --with mypy mypy --strict src tests
