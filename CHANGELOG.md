@@ -6,6 +6,13 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `benchmarks/`: known cases with the answer we expect, run in CI with
+  `--check` (#5). Melito di Porto Salvo and Bagaladi on 10 October 2026 (DPC
+  radar, SRT1), six e-ITALICA landslides, and two constructed cases. 0.1.0
+  passes 9 of 16 checks.
+
 ## [0.1.0] - 2026-11-02
 
 ### Added

@@ -1,0 +1,12 @@
+# CONSTRUCTED from melito-srt1.csv: its hours 10/10 00:00-07:00, with 02:00-04:00
+# not measured (empty), as where a radar is blind or a frame is missing.
+# (c) Dipartimento della Protezione Civile, CC BY-SA 4.0.
+time,mm
+2026-10-10T00:00Z,20.2
+2026-10-10T01:00Z,16.0
+2026-10-10T02:00Z,
+2026-10-10T03:00Z,
+2026-10-10T04:00Z,
+2026-10-10T05:00Z,17.7
+2026-10-10T06:00Z,5.4
+2026-10-10T07:00Z,0.3
