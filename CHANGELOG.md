@@ -8,6 +8,12 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `measure`: `skill`, `skill_at_budget`, `cutoff_at_budget`, `Skill` and
+  `auc`, to measure a threshold on landslides and ordinary moments: hit rate,
+  alert share, discrimination, alerts per landslide caught (#7). Same
+  definitions as Limen's backtests: on 2,000 random inputs the results equal
+  Limen's `_soglia_a_carico` and both of its `auc` functions.
+
 - `notebooks/`: three example notebooks, run without network and in CI
   (#14).
 - `Dockerfile` and `compose.yaml`: the notebooks and the benchmark with
