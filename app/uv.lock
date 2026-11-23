@@ -163,6 +163,8 @@ docs = [
     { name = "zensical", specifier = ">=0.1.0" },
 ]
 examples = [
+    { name = "dpc-radar", specifier = "~=0.3.0" },
+    { name = "ispra-idrogeo", specifier = "~=0.10.0" },
     { name = "jupyterlab", specifier = ">=4.2" },
     { name = "matplotlib", specifier = ">=3.9" },
     { name = "nbconvert", specifier = ">=7.16" },
