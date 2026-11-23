@@ -8,6 +8,14 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `benchmarks/measures/`: the measure of #8 from 2018 to 2025, made in Limen
+  (limen#677) on the radar history and 4,200 dated landslides. On the same
+  971 landslides the rain is above T5 at the gauge for 95.6 % and on the
+  radar for 66.0 %; the radar reads 0.68 times the gauge on the triggering
+  events; the threshold still separates on radar rain (AUC 0.85 and 0.73); a
+  threshold fitted on radar rain does not hold, so none goes in.
+  `tests/test_measures_data.py` recomputes the numbers.
+
 - `benchmarks/measures/`: the pilot of #8 on 2026, the «Merging» against the
   radar alone at 9 IdroGEO landslides, made by `tools/pilot_2026.py` on
   Limen's archive: 7 of 9 caught with 9.4 alerts per landslide caught, 8 of
