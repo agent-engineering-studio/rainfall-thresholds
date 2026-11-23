@@ -465,10 +465,13 @@ uv run python -m benchmarks.run
 
 ## Notebooks and Docker
 
-Three [example notebooks](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks)
-need no network: the Italian thresholds over the e-ITALICA landslides, the
-storm of Melito on the DPC radar, and fitting your own threshold. Open them
-with uv, or with Docker alone:
+Four [example notebooks](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks):
+the Italian thresholds over the e-ITALICA landslides, the storm of Melito on
+the DPC radar, and fitting your own threshold, with no network; and the join
+with the sister libraries, landslides dated by
+[ispra-idrogeo](https://agentengineering.it/ispra-idrogeo/) against radar rain
+from [dpc-radar](https://agentengineering.it/dpc-radar/). Open them with uv, or
+with Docker alone:
 
 ```bash
 uv run --group examples jupyter lab notebooks/
@@ -538,6 +541,10 @@ The base package still has no dependencies: the MCP SDK comes only with the
   thresholds to events from `reconstruct_events` mixes the two: fine for
   monitoring, worth knowing for a study.
 - **Units are fixed:** hours, millimetres, millimetres per hour.
+- **No sister library inside.** The package imports neither dpc-radar nor
+  ispra-idrogeo, and a test keeps it so: [Limen](https://github.com/agent-engineering-studio/limen)
+  pins all three, and a library that imported another would tie their
+  releases together. The join lives in Limen, in notebook 04 and in `app/`.
 
 ## Where it's used
 

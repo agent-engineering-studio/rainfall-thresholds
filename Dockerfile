@@ -9,6 +9,11 @@ FROM python:3.13-slim
 
 COPY --from=ghcr.io/astral-sh/uv:0.13 /uv /bin/uv
 
+# Notebook 04 reads the radar with dpc-radar: rasterio brings its own GDAL,
+# which needs libexpat from the system.
+RUN apt-get update && apt-get install -y --no-install-recommends libexpat1 \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV UV_PROJECT_ENVIRONMENT=/opt/venv \
     UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \

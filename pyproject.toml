@@ -53,6 +53,10 @@ examples = [
     "jupyterlab>=4.2",
     "nbconvert>=7.16",
     "matplotlib>=3.9",
+    # Only for notebooks/04: the sister libraries, joined in a notebook as Limen
+    # joins them. The package itself never imports them (tests/test_package.py).
+    "dpc-radar~=0.3.0",
+    "ispra-idrogeo~=0.10.0",
 ]
 
 docs = [

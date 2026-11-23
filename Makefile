@@ -31,7 +31,7 @@ docs:
 	uv run --group docs zensical build --strict
 	uv run --group docs python tools/build_llms.py
 
-# Run every notebook again and save the results (no network needed).
+# Run every notebook again and save the results. 04 needs the network.
 notebooks:
 	cd notebooks && uv run --group examples jupyter nbconvert --to notebook --execute --inplace *.ipynb
 
