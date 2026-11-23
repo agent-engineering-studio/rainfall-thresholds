@@ -8,6 +8,12 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `notebooks/04_radar_on_dated_landslides`: the join with the sister
+  libraries, run once on 23/11/2026: 9 dated slides and flows since June
+  2026 (IdroGEO), 48 hours of DPC radar rain at each, 7 of 8 with a rain
+  event above T5. Needs the network; not run in CI. dpc-radar and
+  ispra-idrogeo are in the `examples` group only, never in the package.
+
 - `app/`: a calibration bench for public bodies, in Italian, with Bootstrap
   Italia and no CDN. It fits a threshold on e-ITALICA filtered by region,
   month and landslide type, or on the body's own landslides; compares it with
