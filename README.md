@@ -549,11 +549,14 @@ says what each phase measured.
   on 9 dated landslides and Limen's archive of DPC frames, the «Merging»
   caught 7 of 9 with 9.4 alerts per landslide caught; the radar alone 8 of 9
   with 12.25. Nine landslides: a first look, not a validation.
+- **The measure from 2018 to 2025** ([`benchmarks/measures/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/benchmarks/measures)):
+  on the radar history and 4,200 dated landslides, the rain is above T5 at
+  the gauge for 95.6 % of the same landslides and on the radar for 66.0 %.
+  The threshold still separates on radar rain (AUC 0.85 and 0.73), and a
+  threshold fitted on radar rain does not hold: none goes in.
 - **Open, and measured in Limen, not here:** the numbers of
   [limen#243](https://github.com/agent-engineering-studio/limen/issues/243)
-  recomputed with `measure` (#7); whether the gauge thresholds hold on radar
-  rain, on the 1,608 IdroGEO landslides dated to the day since 2018 with the
-  point within 1 km, region by region (#8); `strongest_event` against the
+  recomputed with `measure` (#7); `strongest_event` against the
   last event on the twelve backtest windows of Limen, before it is switched
   on there.
 

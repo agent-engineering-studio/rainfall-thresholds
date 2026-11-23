@@ -70,7 +70,7 @@ and both of its AUC functions, with no difference.
 functions. The ordinary moments are in Limen's archive: it runs on Limen's
 server.
 
-## Phase 3 · Rain that does not come from a rain gauge · [#8](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/8) · pilot ✅, measure from 2018 in Limen
+## Phase 3 · Rain that does not come from a rain gauge · [#8](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/8) · pilot ✅, measure from 2018 ✅
 
 The Italian thresholds are fitted on rain gauges; the DPC radar alone read
 about 20 % more than the gauge-corrected «Merging» in 2026, and not the same
@@ -89,10 +89,26 @@ above T5 at those points: 9.4 alerts per landslide caught. With the radar
 alone, 8 of 9 caught and 98 of 382 events above T5: 12.25 alerts per
 landslide caught. One landslide more, 32 alerts more.
 
-**What is not there:** the measure from 2018 on the radar history and all
-the dated landslides, region by region
-([limen#677](https://github.com/agent-engineering-studio/limen/issues/677)).
-Nine landslides, almost all in the north, in five months: a pilot.
+**Measure from 2018 to 2025** ([the data and how they were made](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/benchmarks/measures),
+[limen#677](https://github.com/agent-engineering-studio/limen/issues/677)):
+the radar history at 4,200 dated landslides, 1,057 of e-ITALICA (with the
+rain at the gauge) and 3,143 of IdroGEO.
+
+- On the same 971 landslides the rain is above T5 at the gauge for 95.6 %
+  and on the radar for 66.0 % (37.2 % without Liguria). On the triggering
+  events the radar reads 0.68 times the gauge.
+- Against 388,063 ordinary moments at the same points, the gauge threshold
+  still separates on radar rain: AUC 0.85 on e-ITALICA, 0.73 on IdroGEO.
+- The bias factor of dpc-radar lowers the rain and does not change the
+  order: the same landslides caught at the same alert share.
+- A threshold fitted on radar rain does not hold: alpha between 0.35 and
+  1.96 from one set and one macroregion to another. **No radar threshold
+  goes into the library.**
+
+**What is not there:** a comparison at the same place (the radar is read at
+the landslide, the gauge is the nearest one), and samples that are not
+mostly one region: e-ITALICA from 2018 is 74 % Liguria, IdroGEO 47 %
+Trentino-Alto Adige.
 
 ## Phase 4 · AI layer · [#9](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/9) · ✅
 
