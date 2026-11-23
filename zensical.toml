@@ -12,6 +12,7 @@ copyright = "Code Apache-2.0. Italian thresholds fitted on e-ITALICA v4 (Brunett
 exclude_docs = """
 make_figures.py
 make_explainer_data.py
+make_blog_figures.py
 """
 extra_javascript = ["javascripts/explainer.js"]
 extra_css = ["stylesheets/explainer.css"]

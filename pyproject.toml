@@ -73,6 +73,7 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM", "ARG", "PTH", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ARG", "B018"]
+"docs/make_blog_figures.py" = ["E501"]  # labels in two languages
 
 [tool.mypy]
 strict = true
