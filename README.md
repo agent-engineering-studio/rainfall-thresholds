@@ -19,6 +19,7 @@ mark the hours it could not measure as `None`.
 
 [![ci](https://github.com/agent-engineering-studio/rainfall-thresholds/actions/workflows/ci.yml/badge.svg)](https://github.com/agent-engineering-studio/rainfall-thresholds/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/rainfall-thresholds)](https://pypi.org/project/rainfall-thresholds/)
+[![docs](https://img.shields.io/badge/docs-agentengineering.it-blue)](https://agentengineering.it/rainfall-thresholds/)
 [![Python](https://img.shields.io/pypi/pyversions/rainfall-thresholds)](https://pypi.org/project/rainfall-thresholds/)
 [![Dependencies: none](https://img.shields.io/badge/dependencies-none-brightgreen)](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/pyproject.toml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/LICENSE)
@@ -32,6 +33,13 @@ mark the hours it could not measure as `None`.
 catalogue). The blue line is the threshold this library fits: only 5 % of
 those storms fall below it. The red star is the storm from the
 [quick start](#quick-start).</sub>
+
+**Read the story:** [Basta questa pioggia per far franare?](https://agentengineering.it/blog/soglie-pioggia-frane-rainfall-thresholds/)
+([English](https://agentengineering.it/en/blog/soglie-pioggia-frane-rainfall-thresholds/)),
+the last episode of the Open Data series, after
+[dpc-radar](https://agentengineering.it/blog/pioggia-radar-protezione-civile-dpc-radar/)
+and [ispra-idrogeo](https://agentengineering.it/blog/frane-pericolo-idrogeologico-ispra-idrogeo/).
+**Try it** in the browser: [the intensity-duration plane](https://agentengineering.it/rainfall-thresholds/explainer/).
 
 ---
 
@@ -53,6 +61,7 @@ those storms fall below it. The red star is the storm from the
 - [Notebooks and Docker](#notebooks-and-docker)
 - [A calibration bench for public bodies](#a-calibration-bench-for-public-bodies)
 - [For assistants and agents](#for-assistants-and-agents)
+- [Roadmap: what is measured, what is open](#roadmap-what-is-measured-what-is-open)
 - [Good to know](#good-to-know)
 - [References](#references) · [Citing](#citing) · [Contributing](#contributing)
 
@@ -526,6 +535,24 @@ library gives them as data, and checks the words.
 The base package still has no dependencies: the MCP SDK comes only with the
 `mcp` extra.
 
+## Roadmap: what is measured, what is open
+
+The plan is in [#4](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/4),
+and the [roadmap page](https://agentengineering.it/rainfall-thresholds/roadmap/)
+says what each phase measured.
+
+- **Done:** the benchmark (#5), the strongest event and hours not measured
+  (#6), the functions to measure a threshold (#7), the AI layer (#9), the
+  calibration bench, Try it and `publiccode.yml` (#10), notebooks and Docker
+  (#14), the rule that the package depends on no sister library (#21).
+- **Open, and measured in Limen, not here:** the numbers of
+  [limen#243](https://github.com/agent-engineering-studio/limen/issues/243)
+  recomputed with `measure` (#7); whether the gauge thresholds hold on radar
+  rain, on the 1,608 IdroGEO landslides dated to the day since 2018 with the
+  point within 1 km, region by region (#8); `strongest_event` against the
+  last event on the twelve backtest windows of Limen, before it is switched
+  on there.
+
 ## Good to know
 
 - **A threshold is not a forecast.** Rain above T5 means "conditions like
@@ -548,9 +575,17 @@ The base package still has no dependencies: the MCP SDK comes only with the
 
 ## Where it's used
 
-Extracted from [Limen](https://github.com/agent-engineering-studio/limen),
-which uses it for the rainfall component of its landslide score. Using it
-somewhere else? [Open an issue](https://github.com/agent-engineering-studio/rainfall-thresholds/issues)
+- **[Limen](https://github.com/agent-engineering-studio/limen)**, an open
+  early-warning system for landslides, floods and wildfires in Italy, from
+  which the library was extracted. It pins `rainfall-thresholds~=0.3.0` for
+  the rainfall trigger of its landslide score; the choice of the strongest
+  event is in its `landslide.yaml`, off until its backtest measures it.
+- **The Open Data series** of Agent Engineering Studio, with its sister
+  libraries [dpc-radar](https://agentengineering.it/dpc-radar/) and
+  [ispra-idrogeo](https://agentengineering.it/ispra-idrogeo/).
+- **The calibration bench** in `app/`, for public bodies.
+
+Using it somewhere else? [Open an issue](https://github.com/agent-engineering-studio/rainfall-thresholds/issues)
 and tell us: we'd love to list it here.
 
 ## References

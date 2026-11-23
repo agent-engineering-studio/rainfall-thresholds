@@ -8,6 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- Docs site: Examples, Benchmark and Roadmap pages; README: the docs badge,
+  the article of the Open Data series, a roadmap section, where it is used.
+- `docs/make_blog_figures.py` and `docs/img/blog/`: the figures of the
+  article, in Italian and English, from the repository's data.
+
 - `notebooks/04_radar_on_dated_landslides`: the join with the sister
   libraries, run once on 23/11/2026: 9 dated slides and flows since June
   2026 (IdroGEO), 48 hours of DPC radar rain at each, 7 of 8 with a rain
