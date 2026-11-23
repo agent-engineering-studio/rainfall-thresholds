@@ -8,6 +8,11 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `benchmarks/measures/`: the pilot of #8 on 2026, the «Merging» against the
+  radar alone at 9 IdroGEO landslides, made by `tools/pilot_2026.py` on
+  Limen's archive: 7 of 9 caught with 9.4 alerts per landslide caught, 8 of
+  9 with 12.25. `tests/test_measures_data.py` recomputes the numbers.
+
 - Docs site: Examples, Benchmark and Roadmap pages; README: the docs badge,
   the article of the Open Data series, a roadmap section, where it is used.
 - `docs/make_blog_figures.py` and `docs/img/blog/`: the figures of the

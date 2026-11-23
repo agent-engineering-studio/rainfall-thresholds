@@ -545,6 +545,10 @@ says what each phase measured.
   (#6), the functions to measure a threshold (#7), the AI layer (#9), the
   calibration bench, Try it and `publiccode.yml` (#10), notebooks and Docker
   (#14), the rule that the package depends on no sister library (#21).
+- **A pilot on 2026** ([`benchmarks/measures/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/benchmarks/measures)):
+  on 9 dated landslides and Limen's archive of DPC frames, the «Merging»
+  caught 7 of 9 with 9.4 alerts per landslide caught; the radar alone 8 of 9
+  with 12.25. Nine landslides: a first look, not a validation.
 - **Open, and measured in Limen, not here:** the numbers of
   [limen#243](https://github.com/agent-engineering-studio/limen/issues/243)
   recomputed with `measure` (#7); whether the gauge thresholds hold on radar

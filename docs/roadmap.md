@@ -70,7 +70,7 @@ and both of its AUC functions, with no difference.
 functions. The ordinary moments are in Limen's archive: it runs on Limen's
 server.
 
-## Phase 3 · Rain that does not come from a rain gauge · [#8](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/8) · open
+## Phase 3 · Rain that does not come from a rain gauge · [#8](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/8) · pilot ✅, measure from 2018 in Limen
 
 The Italian thresholds are fitted on rain gauges; the DPC radar alone read
 about 20 % more than the gauge-corrected «Merging» in 2026, and not the same
@@ -81,9 +81,18 @@ The data are ready: IdroGEO has 1,710 landslides dated to the day since 2018,
 of ispra-idrogeo). They are uneven: Emilia-Romagna 305, Apulia 2. The measure
 runs in Limen, region by region; a result does not stand for Italy.
 
-**A first look, not a measure:** notebook 04 read 48 hours of radar at the 9
-dated slides and flows since June 2026: 7 of the 8 with a rain event were
-above T5.
+**Pilot on 2026** ([the data and how they were made](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/benchmarks/measures)):
+the 9 IdroGEO slides and flows dated to the day between June and November
+2026, point within 1 km, on Limen's archive of DPC frames. With the
+«Merging» (gauges and radar), 7 of 9 caught and 66 of 338 rainfall events
+above T5 at those points: 9.4 alerts per landslide caught. With the radar
+alone, 8 of 9 caught and 98 of 382 events above T5: 12.25 alerts per
+landslide caught. One landslide more, 32 alerts more.
+
+**What is not there:** the measure from 2018 on the radar history and all
+the dated landslides, region by region
+([limen#677](https://github.com/agent-engineering-studio/limen/issues/677)).
+Nine landslides, almost all in the north, in five months: a pilot.
 
 ## Phase 4 · AI layer · [#9](https://github.com/agent-engineering-studio/rainfall-thresholds/issues/9) · ✅
 
