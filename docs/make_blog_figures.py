@@ -3,8 +3,9 @@
     uv run --with matplotlib python docs/make_blog_figures.py
 
 Writes ``docs/img/blog/<name>-<lang>.png``: the Melito storm against the
-threshold, the drizzle trap, a tile map of the regions, and how the three
-libraries meet. Every number comes from the package, the benchmark series,
+threshold, the drizzle trap, a tile map of the regions, how the three
+libraries meet, how the line sits on the landslides of each region and the
+rain still missing during the storm of Melito. Every number comes from the package, the benchmark series,
 the e-ITALICA fixture or ``docs/data/region_counts.json``.
 """
 
@@ -22,9 +23,13 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch, Rectangle
 
 from rainfall_thresholds import (
+    CALIBRATION,
+    EXPECTED_BELOW,
     ITALICA_T5,
+    event_against_threshold,
     latest_event,
     macroregion_of,
+    rain_to_threshold,
     reconstruct_events,
     strongest_event,
 )
@@ -39,6 +44,17 @@ MACRO_COLOURS = {"northern": "#2a78d6", "central": "#1baf7a", "southern": "#eb68
 
 TEXT = {
     "it": {
+        "trust_title": "Quante frane di ogni regione stanno sotto la soglia",
+        "trust_x": "frane sotto la soglia T5 della macroregione (%), con l'intervallo al 95 %",
+        "trust_expected": "il 5 % atteso",
+        "trust_high": "la soglia qui è alta",
+        "trust_low": "la soglia qui è bassa",
+        "trust_fitted": "le frane non bastano a dirlo",
+        "margin_title": "Melito di Porto Salvo: la pioggia che manca alla soglia",
+        "margin_fallen": "pioggia dell'evento fin qui",
+        "margin_missing": "quanta ne manca per superare la soglia nelle 3 ore dopo",
+        "margin_x": "ora (UTC) del 9 ottobre 2026",
+        "margin_note": "dalle {h}: non manca più niente",
         "hours_since": "ore dall'inizio dell'evento",
         "mm": "millimetri",
         "hourly": "pioggia di ogni ora (radar DPC, SRT1)",
@@ -67,6 +83,17 @@ TEXT = {
         "bulletin": "l'allerta è il bollettino\ndella Protezione Civile",
     },
     "en": {
+        "trust_title": "How many landslides of each region are below the threshold",
+        "trust_x": "landslides below the T5 line of their macroregion (%), with the 95 % interval",
+        "trust_expected": "the 5 % expected",
+        "trust_high": "the line is high here",
+        "trust_low": "the line is low here",
+        "trust_fitted": "the landslides are too few to tell",
+        "margin_title": "Melito di Porto Salvo: the rain still missing to the threshold",
+        "margin_fallen": "rain of the event so far",
+        "margin_missing": "how much is missing to cross the line in the next 3 hours",
+        "margin_x": "hour (UTC) of 9 October 2026",
+        "margin_note": "from {h}: nothing is missing",
         "hours_since": "hours from the start of the event",
         "mm": "millimetres",
         "hourly": "rain of each hour (DPC radar, SRT1)",
@@ -385,8 +412,79 @@ def schema(lang: str) -> None:
     save(fig, "three-libraries", lang)
 
 
+def trust(lang: str) -> None:
+    t = TEXT[lang]
+    colour = {"high": ORANGE, "low": BLUE, "as fitted": GREY}
+    label = {"high": t["trust_high"], "low": t["trust_low"], "as fitted": t["trust_fitted"]}
+    rows = sorted(CALIBRATION.values(), key=lambda c: c.below_share)
+    fig, ax = plt.subplots(figsize=(9, 7))
+    axes_style(ax)
+    seen: set[str] = set()
+    for y, c in enumerate(rows):
+        low, high = c.interval()
+        ax.plot([100 * low, 100 * high], [y, y], color=colour[c.position], linewidth=3)
+        ax.plot(
+            100 * c.below_share,
+            y,
+            "o",
+            color=colour[c.position],
+            markersize=8,
+            label=None if c.position in seen else label[c.position],
+        )
+        seen.add(c.position)
+    ax.axvline(100 * EXPECTED_BELOW, color=INK, linestyle="--", linewidth=1.2)
+    ax.text(
+        100 * EXPECTED_BELOW + 0.4, len(rows) - 0.4, t["trust_expected"], color=INK, fontsize=10
+    )
+    ax.set_yticks(range(len(rows)), [f"{c.region} ({c.events})" for c in rows])
+    ax.set_ylim(-0.8, len(rows) + 0.3)
+    ax.set_xlabel(t["trust_x"], color=INK)
+    ax.set_title(t["trust_title"], color=INK, loc="left", fontsize=13, fontweight="bold")
+    ax.legend(frameon=False, loc="lower right", labelcolor=INK)
+    save(fig, "trust-regions", lang)
+
+
+def margin(lang: str) -> None:
+    t = TEXT[lang]
+    line = ITALICA_T5["southern"]
+    series = dict(read_series("melito-srt1.csv"))
+    hours = [h for h in sorted(series) if h.day == 9 and 10 <= h.hour <= 22]
+    fallen, missing = [], []
+    for now in hours:
+        found = event_against_threshold(
+            {h: mm for h, mm in series.items() if h <= now},
+            line,
+            no_rain_break_hours=6,
+            min_event_mm=0.1,
+        )
+        going = found is not None and (now - found.event.end).total_seconds() < 6 * 3600
+        event = found.event if found is not None and going else None
+        fallen.append(event.total_mm if event else 0.0)
+        missing.append(rain_to_threshold(event, line, more_hours=(3,))[3])
+    x = [h.hour for h in hours]
+    fig, ax = plt.subplots(figsize=(9, 4.8))
+    axes_style(ax)
+    ax.plot(x, fallen, color=RED, linewidth=3, label=t["margin_fallen"])
+    ax.plot(x, missing, color=BLUE, linewidth=3, label=t["margin_missing"])
+    closed = next(h for h, mm in zip(x, missing, strict=True) if mm == 0.0)
+    ax.axvline(closed, color=MUTED, linestyle="--", linewidth=1.2)
+    ax.text(closed + 0.2, max(fallen) * 0.55, t["margin_note"].format(h=f"{closed}:00"), color=INK)
+    ax.set_xticks(x)
+    ax.set_xlabel(t["margin_x"], color=INK)
+    ax.set_ylabel(t["mm"], color=INK)
+    ax.set_title(t["margin_title"], color=INK, loc="left", fontsize=13, fontweight="bold")
+    ax.legend(frameon=False, loc="upper left", labelcolor=INK)
+    save(fig, "melito-margin", lang)
+    print(
+        "margin:",
+        [(h, round(f, 1), round(m, 1)) for h, f, m in zip(x, fallen, missing, strict=True)],
+    )
+
+
 def main() -> None:
     for lang in TEXT:
+        trust(lang)
+        margin(lang)
         melito(lang)
         trap(lang)
         tile_map(lang)
