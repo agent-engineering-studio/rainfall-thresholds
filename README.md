@@ -448,9 +448,9 @@ rainfall part of a simple monitoring loop: a number to watch, not an alert.
 | `cutoff_at_budget(ordinary, budget, *, floor=None)` | function | that cutoff |
 | `Skill` | frozen dataclass | `caught`, `landslides`, `alerts`, `ordinary`, `unmeasured`; `.hit_rate`, `.alert_share`, `.discrimination`, `.alerts_per_caught` |
 | `auc(landslides, ordinary)` | function | Mann-Whitney AUC, ties count half |
-| `facts.threshold_facts`, `assess_facts`, `fit_facts` | functions | the same answers as JSON-ready dicts, with units and the alert rule |
+| `facts.threshold_facts`, `assess_facts`, `fit_facts`, `trust_facts`, `margin_facts`, `published_facts` | functions | the same answers as JSON-ready dicts, with units and the alert rule |
 | `check.check_text(text, facts, *, question="")` | function | numbers of a text that are invented, rounded or in the wrong unit → `list[Misquote]` |
-| `mcp_server.create_server()`, `rainfall-thresholds-mcp` | MCP (extra `mcp`) | tools `threshold`, `assess`, `fit`, `check` |
+| `mcp_server.create_server()`, `rainfall-thresholds-mcp` | MCP (extra `mcp`) | tools `threshold`, `assess`, `fit`, `trust`, `margin`, `published`, `check`; stdio or HTTP |
 | `ITALICA_T5` | read-only mapping | `"italy"`, `"northern"`, `"central"`, `"southern"` → `PowerLawThreshold` |
 | `MACROREGIONS` | read-only mapping | macroregion → set of region names (e-ITALICA spelling) |
 | `macroregion_of(region)` | function | region name or ISTAT region code (`8`, `"08"`) → macroregion, or `None` |
@@ -462,6 +462,10 @@ rainfall part of a simple monitoring loop: a number to watch, not an alert.
 | `caine_excess(event, threshold, *, radar_gauge_factor=1.0)` | function | decades above the line, zero on or below it |
 | `api_kohler_linsley(daily_precip_mm, *, decay_k, initial=0.0)` | function | the Antecedent Precipitation Index, mm |
 | `api_factor(api_mm, *, fallback_baseline_mm, fallback_sigma_mm, sigma_min_mm, baseline_mm=None, sigma_mm=None)` | function | an API as a wetness factor in 0..1; 0.5 when not known |
+| `rain_to_threshold(event, threshold, *, more_hours, radar_gauge_factor=1.0)` | function | the rain still needed to reach the line if the event goes on → `{hours: mm}`; not a forecast |
+| `relative_total(hours, end, *, window_hours, reference_mm, saturation, reduction=0.0, longer_references_mm=None)` | function | the last hours against the place's own climatological reference, 0..1; `None` when no hour was read |
+| `EventAssessment.as_record(*, where, licence)` | method | the assessment as a fact of `opendata-record/v2`, a plain dict |
+| `CALIBRATION`, `calibration_of(region)` | mapping, function | how the line sits on the landslides of each region → `Calibration`: `events`, `below`, `.below_share`, `.interval()`, `.position` (`"high"`, `"low"`, `"as fitted"`), `duration_hours` |
 | `load_regional_catalogue()` | function | published regional thresholds with their sources → `RegionalCatalogue` of `RegionalThreshold` and `Source` |
 | `RainSource` | `typing.Protocol` | `hourly(points, start, end) -> dict[datetime, list[float or None]]`: what can feed the package |
 | `point_series(rain, index)` | function | the series of one point out of `RainSource.hourly` |
@@ -485,22 +489,27 @@ uv run python -m benchmarks.run
 
 ## Notebooks and Docker
 
-Four [example notebooks](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks):
+Five [example notebooks](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks):
 the Italian thresholds over the e-ITALICA landslides, the storm of Melito on
-the DPC radar, and fitting your own threshold, with no network; and the join
-with the sister libraries, landslides dated by
+the DPC radar, fitting your own threshold, and how much to trust the line in
+each region with the rain still missing during a storm, with no network; and
+the join with the sister libraries, landslides dated by
 [ispra-idrogeo](https://agentengineering.it/ispra-idrogeo/) against radar rain
 from [dpc-radar](https://agentengineering.it/dpc-radar/). Open them with uv, or
 with Docker alone:
 
 ```bash
 uv run --group examples jupyter lab notebooks/
-docker compose up              # http://localhost:8888
+make docker                    # the bench (3001), the MCP server (8775), the notebooks (8881)
+docker compose up notebooks    # the notebooks alone: http://localhost:8881
 make docker-bench              # the benchmark, in a container
+make down                      # stop and remove the containers
 ```
 
-The compose file gives no fixed name to containers or images: Compose names
-them after the project, so two copies run side by side.
+`make help` lists every command. The containers are named after the library
+(`rainfall-thresholds-ui`, `-mcp`, `-notebooks`) and the ports clash with no
+sister library, so all of them run on one machine; for a second copy of this
+one, change the prefix and the ports (`make docker NAME=rt-dev TARATURA_PORT=3101 ...`).
 
 ## A calibration bench for public bodies
 
@@ -522,21 +531,26 @@ interactive intensity-duration plane that runs in the browser.
 A language model may word the numbers; it should never compute them. The
 library gives them as data, and checks the words.
 
-- **Facts.** `rainfall_thresholds.facts`: `threshold_facts`, `assess_facts`
-  and `fit_facts` return plain dicts, with the unit in every key (`_mm`,
+- **Facts.** `rainfall_thresholds.facts`: `threshold_facts`, `assess_facts`,
+  `fit_facts`, `trust_facts` (how the line sits on the landslides of a
+  region), `margin_facts` (the rain still needed if the rain goes on) and
+  `published_facts` (the thresholds of the literature for a region, with
+  their sources) return plain dicts, with the unit in every key (`_mm`,
   `_mm_h`, `_h`, `_decades`), what the threshold was fitted on, and the rule
   that a threshold exceeded is not an alert.
 - **MCP server.** `pip install "rainfall-thresholds[mcp]"`, then
-  `rainfall-thresholds-mcp` on standard input and output. Four tools:
-  `threshold`, `assess`, `fit`, `check`. They compute only from what the call
-  gives them: no network, no live rain.
+  `rainfall-thresholds-mcp` on standard input and output, or over HTTP
+  (`--transport streamable-http`, port 8775, `/mcp`; `docker compose up mcp`).
+  Seven tools: `threshold`, `assess`, `fit`, `trust`, `margin`, `published`,
+  `check`. They compute only from what the call gives them: no network, no
+  live rain.
 - **A check of the text.** `check_text(text, facts)` finds numbers invented,
   rounded the wrong way, or in the wrong unit: 30.9 mm written as 30.9 mm/h,
   the trap of every rainfall threshold. It knows that a number is a fact of
   its unit, not that it is said of the right thing.
 - **A faithfulness set.** `benchmarks/faithful.py`: questions, facts, and
   answers written by hand, one faithful and one with known faults; in CI the
-  check must find exactly those faults (8 of 8 today). Answers of a model are
+  check must find exactly those faults (10 of 10 today). Answers of a model are
   not in it yet.
 - **For coding agents.** [`llms.txt`](https://agentengineering.it/rainfall-thresholds/llms.txt),
   [`llms-full.txt`](https://agentengineering.it/rainfall-thresholds/llms-full.txt)
@@ -577,6 +591,18 @@ says what each phase measured.
   those that triggered landslides before", not "a landslide will happen
   here". Slope, soil, vegetation and antecedent wetness all matter. Use it
   as one input to a warning system, alongside expert judgement.
+- **The line is not equally good everywhere.** A T5 line leaves 5 % of the
+  landslides of its macroregion below it; region by region the share goes
+  from 1.3 % in Calabria (4 of 298) to 16.2 % in Valle d'Aosta (11 of 68).
+  `calibration_of(region)` says where it sits high, where low, and where the
+  landslides are too few to tell (Molise has 17).
+- **A landslide with a day and no hour takes the end of its day.** When you
+  pair a dated landslide with hourly rain, the convention of this family of
+  libraries is the next local midnight in Europe/Rome after its day, as UTC:
+  1 January 2010 is 2010-01-01T23:00Z, 1 July 2010 is 2010-07-01T22:00Z. An
+  hour is labelled by its end, so the last hour before the landslide is the
+  one ending at that midnight. ispra-idrogeo gives the instant; notebook 04
+  shows it.
 - **T5 is deliberately low.** By construction, 95 % of past triggering
   events sit above it: it favours catching events over avoiding false
   alarms.

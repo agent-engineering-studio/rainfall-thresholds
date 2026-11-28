@@ -799,16 +799,16 @@ wheels = [
 
 [[package]]
 name = "dpc-radar"
-version = "0.3.0"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "numpy" },
     { name = "rasterio" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a0/11/2217387c0f38cd8e31abb32ae9e413ed8926b27102a2f77692d5db4eced6/dpc_radar-0.3.0.tar.gz", hash = "sha256:897b9c9332e8934b07280fd3dc7295a150b718986c5c72ec2184f831f935e9d1", size = 2546255, upload-time = "2026-11-17T14:17:37.59Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b4/61/4a2f5c1ae48053f7e334d831569097a55ddfdecff1711d05d7bde775b732/dpc_radar-0.6.0.tar.gz", hash = "sha256:c25dd9a35c55a75117e9a58ad7f845dd7982956e42047b8ffad8195d6466c4db", size = 2562219, upload-time = "2026-11-28T14:23:17.944Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/ea/5230464b97656ab529b3d8cdb26bd2473fbe24924b2e06c57ef6cc0faf3a/dpc_radar-0.3.0-py3-none-any.whl", hash = "sha256:018edea95b5b38a8dca641b086ce1ea008909c4c548f3328a6ee7f424d2c30e6", size = 2531109, upload-time = "2026-11-17T14:17:35.266Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/e2/f6b9076aa8e459a0376127efd1542f71fdee50a2e817a73481d2c8e327df/dpc_radar-0.6.0-py3-none-any.whl", hash = "sha256:ec628fe21d4acc5ae1b35a93d6ff7f15633b12729f3ba2ed2368cceda96c0917", size = 2543007, upload-time = "2026-11-28T14:23:16.197Z" },
 ]
 
 [[package]]
@@ -1086,14 +1086,14 @@ wheels = [
 
 [[package]]
 name = "ispra-idrogeo"
-version = "0.10.0"
+version = "0.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/78/b3/3e736d20af0026b5aba60538b6b5578c376af5acb078dc5079b4150ee1bc/ispra_idrogeo-0.10.0.tar.gz", hash = "sha256:d5b33d1149d86cb36aca10b5753fd6293314bf870793d908dc4768e11b54a3d6", size = 239744, upload-time = "2026-11-22T19:06:41.778Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/63/d0/c3b3b05b68c2b68fec5d5b4cfd06d53efbee50a45c5c78639c9e1e881983/ispra_idrogeo-0.14.0.tar.gz", hash = "sha256:4c16020b010fb2996719fae295f6f314e8fab578f0c5906d6426a71ac4e38e20", size = 284131, upload-time = "2026-11-28T14:16:11.599Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fe/1a/c4e47cefdfd6f9c3a663eb78a6eb06c07fe8cd3b5133d0b759594c315aa5/ispra_idrogeo-0.10.0-py3-none-any.whl", hash = "sha256:1cea5bfb7bb5444f9636bbdd293660c90b73e9e3db9c9c238a4e18d894e5534a", size = 218841, upload-time = "2026-11-22T19:06:40.174Z" },
+    { url = "https://files.pythonhosted.org/packages/47/dd/de192fb012dbe45a4066c00f4736c5df9013d731ab8bacb8b884287c5b31/ispra_idrogeo-0.14.0-py3-none-any.whl", hash = "sha256:27fdf6e168514a1742459be66203d9bfd53e43933cbfcebe569a97280f730a92", size = 261854, upload-time = "2026-11-28T14:16:10.275Z" },
 ]
 
 [[package]]
@@ -2736,7 +2736,7 @@ wheels = [
 
 [[package]]
 name = "rainfall-thresholds"
-version = "0.4.0"
+version = "0.5.0"
 source = { editable = "." }
 
 [package.optional-dependencies]
@@ -2746,12 +2746,14 @@ mcp = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "jsonschema" },
     { name = "mcp" },
     { name = "mypy" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
     { name = "ruff" },
+    { name = "types-jsonschema" },
 ]
 docs = [
     { name = "mkdocstrings-python" },
@@ -2771,20 +2773,22 @@ provides-extras = ["mcp"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "jsonschema", specifier = ">=4.26.0" },
     { name = "mcp", specifier = ">=2.3" },
     { name = "mypy", specifier = ">=1.13" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-asyncio", specifier = ">=0.24" },
     { name = "pytest-cov", specifier = ">=6.0" },
     { name = "ruff", specifier = ">=0.8" },
+    { name = "types-jsonschema", specifier = ">=4.26.0.20261006" },
 ]
 docs = [
     { name = "mkdocstrings-python", specifier = ">=1.18" },
     { name = "zensical", specifier = ">=0.1.0" },
 ]
 examples = [
-    { name = "dpc-radar", specifier = "~=0.3.0" },
-    { name = "ispra-idrogeo", specifier = "~=0.10.0" },
+    { name = "dpc-radar", specifier = "~=0.6.0" },
+    { name = "ispra-idrogeo", specifier = "~=0.14.0" },
     { name = "jupyterlab", specifier = ">=4.2" },
     { name = "matplotlib", specifier = ">=3.9" },
     { name = "nbconvert", specifier = ">=7.16" },
@@ -3259,6 +3263,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/ee/9f/c5201d42a484c061e528825fc8e2d565f5abd50a4ced6fb7d29c4ec99b2b/truststore-0.10.5.tar.gz", hash = "sha256:30d36967ccaded5cbb38d602c433f53600036c79d502f4533a49b60a03bbefcd", size = 28091, upload-time = "2026-10-12T22:27:31.808Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/51/e9/3a7820be2bb0fe53b6bc9c3be26d3d1158004e4c3ab953aa6840b955b1e9/truststore-0.10.5-py3-none-any.whl", hash = "sha256:9aaaedaefaf06d8b206278cf8b5012bc897f485a874503501e12d776df78951c", size = 19017, upload-time = "2026-10-12T22:27:30.377Z" },
+]
+
+[[package]]
+name = "types-jsonschema"
+version = "4.26.0.20261006"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "referencing" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/29/d2/1f742605f5a6d39f993134885b8de41c98af606871d3ebddaf3e776bd1eb/types_jsonschema-4.26.0.20261006.tar.gz", hash = "sha256:3eb7db61b6819d40addfdaac7173e749071a7d4a9a4394f0c844598ec84b2500", size = 16843, upload-time = "2026-10-06T08:16:07.318Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8b/a0/4f2e3c0dc3d5cad958006f2e0307065cc8fe4fbf0393ff0b69d55ee9bbe5/types_jsonschema-4.26.0.20261006-py3-none-any.whl", hash = "sha256:29301f4e65e3928540cdf5e23ad716e38bb0c0b416a48dada213edd3d70206ec", size = 16113, upload-time = "2026-10-06T08:16:06.355Z" },
 ]
 
 [[package]]

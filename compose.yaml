@@ -1,32 +1,76 @@
-# rainfall-thresholds with nothing to install but Docker.
+# rainfall-thresholds with nothing to install but Docker. Use the Makefile:
+# `make help`.
 #
-#   docker compose up                       the notebooks, on http://localhost:8888
+#   docker compose up                       the calibration bench, the MCP server and the notebooks
+#   docker compose up taratura              the calibration bench alone, on http://localhost:3001
+#   docker compose up mcp                   the MCP server alone, on http://localhost:8775/mcp
+#   docker compose up notebooks             the notebooks alone, on http://localhost:8881
 #   docker compose run --rm bench           the benchmark of known cases
 #   docker compose run --rm python          Python, with rainfall_thresholds to import
-#   docker compose down                     stop and remove the containers
+#   docker compose --profile tools down     stop and remove the containers
 #
-#   docker compose up taratura              the calibration bench, on http://localhost:3001
-#
-#   RAINFALL_THRESHOLDS_PORT   the port of the notebooks (default 8888)
-#   TARATURA_PORT              the port of the calibration bench (default 3001)
+#   RAINFALL_THRESHOLDS_NAME        the prefix of every container, image and network
+#                                   (default rainfall-thresholds)
+#   TARATURA_PORT                   the port of the calibration bench (default 3001)
+#   RAINFALL_THRESHOLDS_MCP_PORT    the port of the MCP server (default 8775)
+#   RAINFALL_THRESHOLDS_PORT        the port of the notebooks (default 8881)
 #   TARATURA_ENTE, TARATURA_REGIONE
-#                              the name of the public body in the header, and the
-#                              region selected when the page opens (see app/README.md)
+#                                   the name of the public body in the header, and the
+#                                   region selected when the page opens (see app/README.md)
 #
-# No container_name and no image name on purpose: Compose names everything
-# <project>-<service>-N, where the project is this folder's name. Two copies,
-# or two projects, run side by side. Change it with COMPOSE_PROJECT_NAME or -p.
-# The notebooks listen on 127.0.0.1 only, with no token: they are for this
-# machine.
+# Every name starts with the library's: rainfall-thresholds-ui, -mcp, -notebooks.
+# The sister libraries do the same with their own name, and no two of them
+# share a port, so all of them run on one machine. For a second copy of this
+# one, change the prefix and the ports:
+#   RAINFALL_THRESHOLDS_NAME=rt-dev TARATURA_PORT=3101 ... docker compose up
+# Everything listens on 127.0.0.1 only: it is for this machine.
+name: ${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}
 
 x-library: &library
   build: .
+  image: ${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}:local
 
 services:
+  # The calibration bench for a public body (app/): the API and its page.
+  taratura:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    image: ${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}-ui:local
+    container_name: ${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}-ui
+    ports:
+      - "127.0.0.1:${TARATURA_PORT:-3001}:8000"
+    environment:
+      TARATURA_ENTE: ${TARATURA_ENTE:-}
+      TARATURA_REGIONE: ${TARATURA_REGIONE:-}
+
+  # The MCP server for AI agents, over streamable HTTP at /mcp. No network,
+  # no data: it computes from what each call gives it.
+  mcp:
+    <<: *library
+    container_name: ${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}-mcp
+    working_dir: /app
+    command: ["rainfall-thresholds-mcp"]
+    environment:
+      RAINFALL_THRESHOLDS_MCP_TRANSPORT: streamable-http
+      RAINFALL_THRESHOLDS_MCP_HOST: 0.0.0.0
+      RAINFALL_THRESHOLDS_MCP_PORT: "8775"
+      RAINFALL_THRESHOLDS_MCP_ALLOWED_HOSTS: localhost:*,127.0.0.1:*,${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}-mcp:*
+    ports:
+      - "127.0.0.1:${RAINFALL_THRESHOLDS_MCP_PORT:-8775}:8775"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8775/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    restart: unless-stopped
+
+  # Jupyter with the example notebooks (the folder notebooks/ is shared).
   notebooks:
     <<: *library
+    container_name: ${RAINFALL_THRESHOLDS_NAME:-rainfall-thresholds}-notebooks
     ports:
-      - "127.0.0.1:${RAINFALL_THRESHOLDS_PORT:-8888}:8888"
+      - "127.0.0.1:${RAINFALL_THRESHOLDS_PORT:-8881}:8888"
     volumes:
       - ./notebooks:/app/notebooks
 
@@ -43,14 +87,3 @@ services:
     command: ["python"]
     stdin_open: true
     tty: true
-
-  # The calibration bench for a public body (app/): the API and its page.
-  taratura:
-    build:
-      context: .
-      dockerfile: app/Dockerfile
-    ports:
-      - "127.0.0.1:${TARATURA_PORT:-3001}:8000"
-    environment:
-      TARATURA_ENTE: ${TARATURA_ENTE:-}
-      TARATURA_REGIONE: ${TARATURA_REGIONE:-}

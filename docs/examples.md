@@ -2,7 +2,7 @@
 
 ## Notebooks
 
-Four notebooks in [`notebooks/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks),
+Five notebooks in [`notebooks/`](https://github.com/agent-engineering-studio/rainfall-thresholds/tree/main/notebooks),
 saved with their outputs.
 
 - [**1 · The Italian thresholds**](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/notebooks/01_italian_thresholds.ipynb):
@@ -17,13 +17,19 @@ saved with their outputs.
   percentile moves it.
 - [**4 · Radar rain on dated landslides**](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/notebooks/04_radar_on_dated_landslides.ipynb):
   the join with the sister libraries, ispra-idrogeo and dpc-radar, as Limen
-  does it. Needs the network.
+  does it. A landslide dated to the day takes the end of its day (the next
+  local midnight in Europe/Rome). Needs the network.
+- [**5 · How much to trust the line, and how much rain is still missing**](https://github.com/agent-engineering-studio/rainfall-thresholds/blob/main/notebooks/05_trust_and_margin.ipynb):
+  the share of each region's landslides below the line, from 1.3 % in
+  Calabria to 16.2 % in Valle d'Aosta, with the interval; the rain still
+  missing hour by hour during the storm of Melito; the published thresholds
+  of Calabria, Abruzzo-Marche-Umbria and Sicilia; the record.
 
-The first three need no network and run in CI.
+All but the fourth need no network and run in CI.
 
 ```bash
 uv run --group examples jupyter lab notebooks/
-docker compose up              # the same, with Docker alone: http://localhost:8888
+docker compose up notebooks    # the same, with Docker alone: http://localhost:8881
 ```
 
 ## The calibration bench

@@ -9,6 +9,8 @@ from rainfall_thresholds.assess import (
     caine_excess,
     cumulate,
     event_against_threshold,
+    rain_to_threshold,
+    relative_total,
 )
 from rainfall_thresholds.events import (
     RainfallEvent,
@@ -33,13 +35,17 @@ from rainfall_thresholds.regional import (
 )
 from rainfall_thresholds.sources import RainSource, point_series
 from rainfall_thresholds.threshold import PowerLawThreshold
+from rainfall_thresholds.trust import CALIBRATION, EXPECTED_BELOW, Calibration, calibration_of
 
 __version__ = version("rainfall-thresholds")
 
 __all__ = [
+    "CALIBRATION",
+    "EXPECTED_BELOW",
     "ISTAT_REGIONS",
     "ITALICA_T5",
     "MACROREGIONS",
+    "Calibration",
     "EventAssessment",
     "PowerLawThreshold",
     "RainSource",
@@ -55,6 +61,7 @@ __all__ = [
     "api_kohler_linsley",
     "auc",
     "caine_excess",
+    "calibration_of",
     "cumulate",
     "cutoff_at_budget",
     "event_against_threshold",
@@ -64,7 +71,9 @@ __all__ = [
     "macroregion_of",
     "percentile_of",
     "point_series",
+    "rain_to_threshold",
     "reconstruct_events",
+    "relative_total",
     "skill",
     "skill_at_budget",
     "strongest_event",

@@ -166,3 +166,35 @@ def in_intensita(soglia: Mapping[str, Any]) -> tuple[float, float]:
         return soglia["alpha"], 1.0 - soglia["gamma"]
     assert soglia.get("beta") is not None
     return soglia["alpha"], soglia["beta"]
+
+
+def _clamp01(x: float) -> float:
+    return max(0.0, min(1.0, x))
+
+
+def cumulata_norm(
+    samples: list[tuple[datetime, float]],  # bundle.dynamic.rainfall.samples
+    fine: datetime,  # bundle.dynamic.valuation_time
+    *,
+    window_hours: int,  # cum.window_hours
+    saturazione: float,  # cum.saturazione
+    durate_lunghe: Iterable[int],  # cum.durate_lunghe
+    riferimento: float,  # bundle.static.pioggia_riferimento_mm
+    riferimento_lunghe: Mapping[int, float],  # bundle.static.pioggia_riferimento_lunghe_mm
+    riduzione: float,
+) -> float | None:
+    """``MultiFactorScoringEngine._meteo``, the block of the relative total (engine.py:215)."""
+    cumulata_norm: float | None = None
+    inizio = fine - timedelta(hours=window_hours)
+    ore = [mm for t, mm in samples if inizio < t <= fine]
+    if ore:
+        metro = saturazione * (1.0 - riduzione)
+        cumulata_norm = _clamp01(sum(ore) / (metro * riferimento))
+        for durata in durate_lunghe:
+            rif = riferimento_lunghe.get(durata)
+            if rif is None:
+                continue
+            da = fine - timedelta(hours=durata)
+            mm = sum(mm for t, mm in samples if da < t <= fine)
+            cumulata_norm = max(cumulata_norm, _clamp01(mm / (metro * rif)))
+    return cumulata_norm

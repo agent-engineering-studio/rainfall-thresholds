@@ -20,7 +20,12 @@ the radar as dpc-radar does; missing when CUM3 is missing) and the radar alone
 compared with the T5 threshold of the macroregion:
 
 - a landslide is **caught** when an event above T5 ends in the 72 hours
-  before the end of its day (the date has no hour);
+  before the end of its day (the date has no hour). Here "the end of its day"
+  is 23:00 UTC of that day: the measure was made before the family's
+  convention (the next local midnight in Europe/Rome, 23:00 UTC in winter and
+  22:00 in summer), and is not recomputed. The landslides are from June to
+  November, so for most of them the window ends one hour later than the
+  convention would put it;
 - every event above T5 at that point in the period is an **alert**.
 
 **What it says.**
@@ -69,7 +74,11 @@ in Limen.
 - 3,143 landslides of IdroGEO dated to the day, from 2018 to 2025.
 
 At each point, the rainfall events (6 dry hours, 2 mm) that touch the 48 hours
-before the landslide. The score is the highest exceedance over the T5
+before the landslide. For a landslide with no hour the window ended 23 hours
+after the instant Limen had stored for it (`fine_finestra_frana` in Limen's
+`cli/misura_innesco.py`): Limen's rule at the time, not the family's
+convention (the next local midnight in Europe/Rome), which came later. The
+measure is not recomputed. The score is the highest exceedance over the T5
 threshold of the macroregion, in decades. `-99` means no rain event in the
 window; an empty score means the window was not measured. The **ordinary
 moments** are the same points every 30 days, at least 15 days away from a
