@@ -1,6 +1,6 @@
 [project]
 name = "rainfall-thresholds"
-version = "0.3.0"
+version = "0.4.0"
 description = "Rainfall intensity-duration thresholds for shallow landslides (Caine power law, frequentist fitting)"
 readme = "README.md"
 keywords = ["landslide", "rainfall threshold", "intensity-duration", "caine", "hydrology", "natural hazards", "italy", "italica"]

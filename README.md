@@ -435,7 +435,7 @@ rainfall part of a simple monitoring loop: a number to watch, not an alert.
 
 | Name | Kind | What it is |
 |---|---|---|
-| `PowerLawThreshold(alpha, beta)` | frozen dataclass | `I = α·D^(-β)`, with `.intensity(D)`, `.cumulated(D)`, `.exceedance(I, D)` |
+| `PowerLawThreshold(alpha, beta)` | frozen dataclass | `I = α·D^(-β)`, with `.intensity(D)`, `.cumulated(D)`, `.exceedance(I, D)`, `.scaled(factor)` |
 | `reconstruct_events(series, *, no_rain_break_hours, min_event_mm, source=None)` | function | hourly `(datetime, mm or None)` pairs → `list[RainfallEvent]`; `None` is not measured |
 | `strongest_event(events, threshold)` | function | the event furthest above the threshold, or `None` |
 | `latest_event(events)` | function | the event that ended last, or `None` |
@@ -453,7 +453,18 @@ rainfall part of a simple monitoring loop: a number to watch, not an alert.
 | `mcp_server.create_server()`, `rainfall-thresholds-mcp` | MCP (extra `mcp`) | tools `threshold`, `assess`, `fit`, `check` |
 | `ITALICA_T5` | read-only mapping | `"italy"`, `"northern"`, `"central"`, `"southern"` → `PowerLawThreshold` |
 | `MACROREGIONS` | read-only mapping | macroregion → set of region names (e-ITALICA spelling) |
-| `macroregion_of(region)` | function | region name → macroregion, or `None` |
+| `macroregion_of(region)` | function | region name or ISTAT region code (`8`, `"08"`) → macroregion, or `None` |
+| `ISTAT_REGIONS` | read-only mapping | ISTAT region code → region name |
+| `threshold_for(macroregion, thresholds=ITALICA_T5, *, default="italy")` | function | the threshold of a macroregion, or the default one |
+| `event_against_threshold(hours, threshold, *, no_rain_break_hours, min_event_mm, choice="latest", source=None, radar_gauge_factor=1.0)` | function | `{datetime: mm or None}` → `EventAssessment` or `None` |
+| `EventAssessment` | frozen dataclass | `event`, `threshold`, `borders_unmeasured`; `.threshold_mm_h`, `.threshold_mm`, `.ratio`, `.excess_decades`, `.at_least` |
+| `cumulate(hours, end, *, windows_hours)` | function | the totals of the last N hours → `{N: WindowTotal}`; no total when an hour is not measured |
+| `caine_excess(event, threshold, *, radar_gauge_factor=1.0)` | function | decades above the line, zero on or below it |
+| `api_kohler_linsley(daily_precip_mm, *, decay_k, initial=0.0)` | function | the Antecedent Precipitation Index, mm |
+| `api_factor(api_mm, *, fallback_baseline_mm, fallback_sigma_mm, sigma_min_mm, baseline_mm=None, sigma_mm=None)` | function | an API as a wetness factor in 0..1; 0.5 when not known |
+| `load_regional_catalogue()` | function | published regional thresholds with their sources → `RegionalCatalogue` of `RegionalThreshold` and `Source` |
+| `RainSource` | `typing.Protocol` | `hourly(points, start, end) -> dict[datetime, list[float or None]]`: what can feed the package |
+| `point_series(rain, index)` | function | the series of one point out of `RainSource.hourly` |
 
 Everything is fully typed (`py.typed`) and checked with `mypy --strict`.
 

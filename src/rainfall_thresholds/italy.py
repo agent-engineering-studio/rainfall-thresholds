@@ -15,6 +15,7 @@ partitions: they are what this package's method gives on their data.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from types import MappingProxyType
 
 from rainfall_thresholds.threshold import PowerLawThreshold
@@ -54,6 +55,65 @@ ITALICA_T5: MappingProxyType[str, PowerLawThreshold] = MappingProxyType(
 )
 
 
-def macroregion_of(region: str) -> str | None:
-    """The macroregion of an Italian region (e-ITALICA spelling), or ``None``."""
-    return next((name for name, regions in MACROREGIONS.items() if region in regions), None)
+#: The ISTAT code of each region, with the e-ITALICA spelling of its name.
+#: Trentino-Alto Adige is one region (code 4), as in ISTAT: the two autonomous
+#: provinces have province codes, not region codes.
+ISTAT_REGIONS: MappingProxyType[int, str] = MappingProxyType(
+    {
+        1: "Piemonte",
+        2: "Valle d'Aosta",
+        3: "Lombardia",
+        4: "Trentino-Alto Adige",
+        5: "Veneto",
+        6: "Friuli-Venezia Giulia",
+        7: "Liguria",
+        8: "Emilia-Romagna",
+        9: "Toscana",
+        10: "Umbria",
+        11: "Marche",
+        12: "Lazio",
+        13: "Abruzzo",
+        14: "Molise",
+        15: "Campania",
+        16: "Puglia",
+        17: "Basilicata",
+        18: "Calabria",
+        19: "Sicilia",
+        20: "Sardegna",
+    }
+)
+
+
+def macroregion_of(region: str | int) -> str | None:
+    """The macroregion of an Italian region, or ``None``.
+
+    ``region`` is the name as e-ITALICA spells it (``"Emilia-Romagna"``) or
+    the ISTAT region code, as a number or as text (``8``, ``"08"``).
+    """
+    name = _region_name(region)
+    return next((key for key, regions in MACROREGIONS.items() if name in regions), None)
+
+
+def _region_name(region: str | int) -> str | None:
+    if isinstance(region, bool):
+        return None
+    if isinstance(region, int):
+        return ISTAT_REGIONS.get(region)
+    if region.isascii() and region.isdigit():
+        return ISTAT_REGIONS.get(int(region))
+    return region
+
+
+def threshold_for(
+    macroregion: str | None,
+    thresholds: Mapping[str, PowerLawThreshold] = ITALICA_T5,
+    *,
+    default: str = "italy",
+) -> PowerLawThreshold:
+    """The threshold of a macroregion, or the ``default`` one when it has none.
+
+    ``thresholds`` are the caller's own if given (a calibration, a
+    configuration file); it must have the ``default`` key.
+    """
+    found = thresholds.get(macroregion) if macroregion is not None else None
+    return thresholds[default] if found is None else found

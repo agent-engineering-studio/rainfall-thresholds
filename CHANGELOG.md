@@ -6,7 +6,49 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-11-28
+
+The rainfall logic of one domain that lived in Limen moves here, so that
+Limen can be a thin application. Nothing that was public changes.
+
 ### Added
+
+- `assess`: `event_against_threshold`, the event of an hourly series against
+  the threshold at its duration, as an `EventAssessment` (`threshold_mm_h`,
+  `threshold_mm`, `ratio`, `excess_decades`, `borders_unmeasured`,
+  `at_least`: an event with hours not measured inside or at its edges is a
+  lower bound); `cumulate`, the totals of the last N hours as `WindowTotal`,
+  with no total when an hour is not measured; `caine_excess`, decades above
+  the line, zero below. From Limen's `core/pioggia_frane.py` and
+  `core/scoring/caine.py`.
+- `radar_gauge_factor` on `event_against_threshold` and `caine_excess`: a
+  threshold fitted on gauges, applied to radar rain, is lowered by the
+  radar/gauge ratio. A plain number of the caller's; the default is 1, no
+  correction. `PowerLawThreshold.scaled(factor)` is the same line with
+  `alpha` multiplied.
+- `antecedent`: `api_kohler_linsley`, the Antecedent Precipitation Index
+  (Kohler & Linsley 1951), and `api_factor`, an API as a wetness factor
+  between 0 and 1. The decay, the baseline and the sigmas are parameters
+  with no default. From Limen's `core/scoring/api.py`.
+- `regional`: `load_regional_catalogue`, 44 published thresholds for Italian
+  regions, physiographic areas and alert zones (Vennari 2014, Peruccacci
+  2017, Segoni 2015, Nocentini 2024), each with citation, URL and licence, as
+  `RegionalThreshold` with `.as_intensity()`. Data to compare with: nothing
+  applies them. In `regional_thresholds.toml`, read with the standard
+  library. From Limen's `soglie_frane_regionali.yaml`, with Limen's area ids
+  replaced by region names.
+- `macroregion_of` also takes an ISTAT region code (`8`, `"08"`);
+  `ISTAT_REGIONS`, code to region name.
+- `threshold_for(macroregion, thresholds=ITALICA_T5, *, default="italy")`:
+  the threshold of a macroregion, or the default one.
+- `sources.RainSource`, a `typing.Protocol` for what gives hourly rain at
+  points (`hourly(points, start, end) -> dict[datetime, list[float | None]]`,
+  `None` is not measured), and `point_series`, the series of one point. The
+  archives of dpc-radar have this shape; the package still imports no sister
+  library.
+- `tests/limen_reference.py` and `tests/test_limen_parity.py`: Limen's code
+  as it was at 3b0e1ee, run next to the package's on fixed inputs.
+
 
 - `benchmarks/measures/`: the measure of #8 from 2018 to 2025, made in Limen
   (limen#677) on the radar history and 4,200 dated landslides. On the same

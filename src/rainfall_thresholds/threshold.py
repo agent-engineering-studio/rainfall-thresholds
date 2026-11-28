@@ -45,6 +45,16 @@ class PowerLawThreshold:
             return -math.inf
         return math.log10(intensity_mm_h) - math.log10(self.intensity(duration_hours))
 
+    def scaled(self, factor: float) -> PowerLawThreshold:
+        """The same slope with ``alpha`` multiplied by ``factor``.
+
+        A lower line (``factor < 1``) for rain that reads less than the rain
+        the threshold was fitted on, or for ground that needs less of it.
+        """
+        if not factor > 0:
+            raise ValueError(f"factor must be > 0, got {factor}")
+        return PowerLawThreshold(alpha=self.alpha * factor, beta=self.beta)
+
 
 def _check_duration(duration_hours: float) -> None:
     if duration_hours <= 0:
