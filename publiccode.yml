@@ -5,7 +5,7 @@ name: rainfall-thresholds
 url: "https://github.com/agent-engineering-studio/rainfall-thresholds.git"
 landingURL: "https://agentengineering.it/rainfall-thresholds/"
 releaseDate: "2026-11-28"
-softwareVersion: "0.5.0"
+softwareVersion: "0.5.1"
 platforms: [web, linux, mac, windows]
 categories: [data-analytics, data-visualization]
 usedBy: []

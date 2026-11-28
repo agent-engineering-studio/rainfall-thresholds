@@ -22,6 +22,9 @@ from rainfall_thresholds import (
 )
 
 T0 = datetime(2026, 10, 1, tzinfo=UTC)
+#: The schema published with egms-client 0.11.0, at
+#: https://agentengineering.it/egms-client/schema/opendata-record-v2.json
+#: (compared on 28/11/2026). A copy: the package imports no sister library.
 SCHEMA = json.loads(
     (Path(__file__).parent / "fixtures" / "opendata-record-v2.json").read_text(encoding="utf-8")
 )
