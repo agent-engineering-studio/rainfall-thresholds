@@ -1,0 +1,443 @@
+# Published regional rainfall thresholds for landslide triggering in Italy.
+#
+# Data with their sources, not the thresholds this package fits: those are
+# `rainfall_thresholds.ITALICA_T5`. Moved here from Limen (limen#506), survey
+# of 2026-11-12. An entry is here only with published numeric parameters and a
+# licence that allows transcribing them. The thresholds of Emilia-Romagna
+# (SIGMA), Piemonte (SLOPS/DEFENSE), Sardegna, Veneto, Puglia, Lazio and the
+# other regions are not here: either not published in numbers, or with no
+# declared licence.
+#
+# `form`:
+#   E-D  E = alpha * D^gamma, event cumulated rainfall E in mm, duration D in
+#        hours (CNR-IRPI). As an intensity, I = alpha * D^(gamma - 1).
+#   I-D  I = alpha * D^(-beta), intensity I in mm/h.
+# `regions`: the Italian regions (e-ITALICA spelling) the threshold covers
+# whole. A threshold for an alert zone or a physiographic area has `zone` and
+# no `regions`: applying it needs the geometry of the zone, which is not here.
+# `duration_hours`: the range of durations it was fitted on.
+# `no_rain_gap_hours`: the dry hours that close an event, where published.
+
+[sources.vennari2014]
+citation = "Vennari C. et al. (2014), Rainfall thresholds for shallow landslide occurrence in Calabria, southern Italy, NHESS 14, 317-330"
+url = "https://nhess.copernicus.org/articles/14/317/2014/nhess-14-317-2014.pdf"
+license = "CC BY 3.0"
+
+[sources.peruccacci2017]
+citation = "Peruccacci S. et al. (2017), Rainfall thresholds for possible landslide occurrence in Italy, Geomorphology 290, 39-57"
+url = "https://geomorphology.irpi.cnr.it/publications/repository/public/journals/2017/peruccacci-et-al-2017.pdf"
+license = "CC BY 4.0"
+
+[sources.segoni2015]
+citation = "Segoni S. et al. (2015), NHESS 15, 853-861, Tab. 1 (soglie per le zone di allerta della Toscana)"
+url = "https://nhess.copernicus.org/articles/15/853/2015/nhess-15-853-2015.pdf"
+license = "CC BY 3.0"
+
+[sources.nocentini2024]
+citation = "Nocentini N. et al. (2024), Landslides, Tab. 1-2 (soglie per le zone di allerta della Liguria)"
+url = "https://flore.unifi.it/retrieve/b8259e7f-849b-4f9a-9b15-8b4cbc56e38f/Nocentini%20et%20al%20LANDSLIDES%202024%20%282%29.pdf"
+license = "CC BY 4.0"
+
+[[thresholds]]
+id = "calabria-t5"
+regions = ["Calabria"]
+form = "E-D"
+alpha = 8.6
+gamma = 0.41
+duration_hours = [1.0, 451.0]
+level = "T5"
+source = "vennari2014"
+note = "Tab. 2, T5,C; incertezze Δα 1,1, Δγ 0,03"
+
+[[thresholds]]
+id = "abruzzo-marche-umbria-t5"
+regions = ["Abruzzo", "Marche", "Umbria"]
+form = "E-D"
+alpha = 7.4
+gamma = 0.38
+duration_hours = [1.0, 1212.0]
+level = "T5"
+source = "vennari2014"
+note = "T5,AMU di Peruccacci et al. 2012, riportata in Vennari 2014 Tab. 2"
+
+[[thresholds]]
+id = "sicilia-t5"
+regions = ["Sicilia"]
+form = "E-D"
+alpha = 9.9
+gamma = 0.3
+duration_hours = [1.0, 252.0]
+level = "T5"
+source = "peruccacci2017"
+note = "Tab. 1, area fisica P7 (Sicilia)"
+
+[[thresholds]]
+id = "calabria-tirreno-t5"
+zone = "Calabria versante tirrenico"
+form = "E-D"
+alpha = 9.7
+gamma = 0.36
+level = "T5"
+source = "vennari2014"
+
+[[thresholds]]
+id = "calabria-ionio-t5"
+zone = "Calabria versante ionico"
+form = "E-D"
+alpha = 9.0
+gamma = 0.5
+duration_hours = [1.0, 357.0]
+level = "T5"
+source = "vennari2014"
+
+[[thresholds]]
+id = "calabria-t1"
+zone = "Calabria"
+form = "E-D"
+alpha = 5.8
+gamma = 0.41
+level = "T1"
+source = "vennari2014"
+
+[[thresholds]]
+id = "italia-t5"
+zone = "Italia"
+form = "E-D"
+alpha = 7.7
+gamma = 0.39
+duration_hours = [1.0, 1212.0]
+level = "T5"
+source = "peruccacci2017"
+
+[[thresholds]]
+id = "alpi-p1-t5"
+zone = "P1 Alpi"
+form = "E-D"
+alpha = 6.3
+gamma = 0.47
+level = "T5"
+source = "peruccacci2017"
+
+[[thresholds]]
+id = "appennino-p4-t5"
+zone = "P4 Appennino"
+form = "E-D"
+alpha = 8.6
+gamma = 0.36
+level = "T5"
+source = "peruccacci2017"
+
+[[thresholds]]
+id = "tirreno-p5-t5"
+zone = "P5 bordo tirrenico"
+form = "E-D"
+alpha = 9.3
+gamma = 0.34
+level = "T5"
+source = "peruccacci2017"
+
+[[thresholds]]
+id = "adriatico-p6-t5"
+zone = "P6 bordo adriatico"
+form = "E-D"
+alpha = 7.6
+gamma = 0.38
+level = "T5"
+source = "peruccacci2017"
+
+[[thresholds]]
+id = "toscana-a1"
+zone = "A1"
+form = "I-D"
+alpha = 61.4
+beta = 0.78
+no_rain_gap_hours = 18.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-a2"
+zone = "A2"
+form = "I-D"
+alpha = 34.0
+beta = 0.86
+no_rain_gap_hours = 18.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-a3"
+zone = "A3"
+form = "I-D"
+alpha = 52.4
+beta = 0.73
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-a4"
+zone = "A4"
+form = "I-D"
+alpha = 101.5
+beta = 0.99
+no_rain_gap_hours = 18.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-b1"
+zone = "B1"
+form = "I-D"
+alpha = 33.8
+beta = 0.81
+no_rain_gap_hours = 20.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-b2-b3"
+zone = "B2 B3"
+form = "I-D"
+alpha = 22.5
+beta = 0.65
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-b4"
+zone = "B4"
+form = "I-D"
+alpha = 49.9
+beta = 0.73
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-b5"
+zone = "B5"
+form = "I-D"
+alpha = 405.9
+beta = 1.29
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-c1-c4"
+zone = "C1 C2 C3 C4"
+form = "I-D"
+alpha = 49.2
+beta = 0.77
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-d1-d3"
+zone = "D1 D3"
+form = "I-D"
+alpha = 40.5
+beta = 0.9
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-d2"
+zone = "D2"
+form = "I-D"
+alpha = 31.6
+beta = 0.76
+no_rain_gap_hours = 12.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-d4"
+zone = "D4"
+form = "I-D"
+alpha = 33.5
+beta = 0.74
+no_rain_gap_hours = 15.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-e1"
+zone = "E1"
+form = "I-D"
+alpha = 20.0
+beta = 0.66
+no_rain_gap_hours = 12.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-e2"
+zone = "E2"
+form = "I-D"
+alpha = 29.6
+beta = 0.75
+no_rain_gap_hours = 12.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-e3"
+zone = "E3"
+form = "I-D"
+alpha = 20.9
+beta = 0.78
+no_rain_gap_hours = 10.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-e4"
+zone = "E4"
+form = "I-D"
+alpha = 15.0
+beta = 0.69
+no_rain_gap_hours = 32.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-f1-f4"
+zone = "F1 F4"
+form = "I-D"
+alpha = 37.2
+beta = 0.88
+no_rain_gap_hours = 24.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "toscana-f2-f3"
+zone = "F2 F3"
+form = "I-D"
+alpha = 50.7
+beta = 0.78
+no_rain_gap_hours = 36.0
+source = "segoni2015"
+
+[[thresholds]]
+id = "liguria-a-basso"
+zone = "Ligu-A"
+form = "I-D"
+alpha = 9.05
+beta = 0.58
+level = "basso"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-a-moderato"
+zone = "Ligu-A"
+form = "I-D"
+alpha = 21.0
+beta = 0.58
+level = "moderato"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-a-alto"
+zone = "Ligu-A"
+form = "I-D"
+alpha = 34.0
+beta = 0.58
+level = "alto"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-b-basso"
+zone = "Ligu-B"
+form = "I-D"
+alpha = 21.78
+beta = 0.67
+level = "basso"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-b-moderato"
+zone = "Ligu-B"
+form = "I-D"
+alpha = 36.0
+beta = 0.67
+level = "moderato"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-b-alto"
+zone = "Ligu-B"
+form = "I-D"
+alpha = 56.0
+beta = 0.67
+level = "alto"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-c-basso"
+zone = "Ligu-C"
+form = "I-D"
+alpha = 10.8
+beta = 0.45
+level = "basso"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-c-moderato"
+zone = "Ligu-C"
+form = "I-D"
+alpha = 22.0
+beta = 0.45
+level = "moderato"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-c-alto"
+zone = "Ligu-C"
+form = "I-D"
+alpha = 45.0
+beta = 0.45
+level = "alto"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-d-basso"
+zone = "Ligu-D"
+form = "I-D"
+alpha = 16.7
+beta = 0.57
+level = "basso"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-d-moderato"
+zone = "Ligu-D"
+form = "I-D"
+alpha = 31.0
+beta = 0.57
+level = "moderato"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-d-alto"
+zone = "Ligu-D"
+form = "I-D"
+alpha = 78.0
+beta = 0.57
+level = "alto"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-e-basso"
+zone = "Ligu-E"
+form = "I-D"
+alpha = 22.36
+beta = 0.67
+level = "basso"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-e-moderato"
+zone = "Ligu-E"
+form = "I-D"
+alpha = 43.0
+beta = 0.67
+level = "moderato"
+source = "nocentini2024"
+
+[[thresholds]]
+id = "liguria-e-alto"
+zone = "Ligu-E"
+form = "I-D"
+alpha = 73.0
+beta = 0.67
+level = "alto"
+source = "nocentini2024"

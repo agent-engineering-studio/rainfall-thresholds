@@ -4,8 +4,8 @@ publiccodeYmlVersion: "0"
 name: rainfall-thresholds
 url: "https://github.com/agent-engineering-studio/rainfall-thresholds.git"
 landingURL: "https://agentengineering.it/rainfall-thresholds/"
-releaseDate: "2026-11-22"
-softwareVersion: "0.3.0"
+releaseDate: "2026-11-28"
+softwareVersion: "0.4.0"
 platforms: [web, linux, mac, windows]
 categories: [data-analytics, data-visualization]
 usedBy: []
