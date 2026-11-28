@@ -6,6 +6,63 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-11-28
+
+How much to trust the line in each region, the rain still missing, and the
+standard of the family for Docker, the MCP server and the records. Nothing
+that was public changes, except the default ports and names of the containers.
+
+### Added
+
+- `trust`: `CALIBRATION` and `calibration_of(region)`, how the threshold sits
+  on the landslides of each region. A T5 line has 5 % of the landslides of its
+  macroregion below it; region by region the share goes from 1.3 % (Calabria,
+  4 of 298) to 16.2 % (Valle d'Aosta, 11 of 68). `Calibration.interval()` is
+  the range the real share can be in (Wilson score), `position` reads it:
+  `high` in six regions, `low` in three, `as fitted` in eleven, where the
+  landslides do not tell (Molise has 17). `tests/test_trust.py` counts them
+  again from e-ITALICA.
+- `rain_to_threshold(event, threshold, *, more_hours)`: the rain still needed
+  to reach the threshold if the event goes on. Arithmetic on the line, not a
+  forecast.
+- `relative_total`: the rain of the last hours against a climatological
+  reference of the same place, from 0 to 1, with longer windows; `None` when
+  no hour was read. From Limen's engine (limen#243), with a parity test.
+- `EventAssessment.as_record(where=, licence=)`: the assessment as a fact of
+  `opendata-record/v2`, the plain format the libraries of the family
+  exchange. The schema is copied in the tests and validated there with
+  jsonschema, a test dependency only.
+- `facts`: `trust_facts`, `margin_facts`, `published_facts`; MCP tools
+  `trust`, `margin`, `published`. The faithfulness set has a fifth question,
+  on trust (10 of 10 hand answers scored as written).
+- The MCP server over HTTP: `rainfall-thresholds-mcp --transport
+  streamable-http` (default port 8775), `/mcp` and `GET /health`; every option
+  also from `RAINFALL_THRESHOLDS_MCP_*`. Standard input and output stays the
+  default.
+- `notebooks/05_trust_and_margin`: the calibration region by region, the rain
+  still missing during the storm of Melito, the published thresholds, the
+  record. No network; run in CI.
+- `make help`, `make demo`, `make docker`, `make down`, `make mcp`.
+
+### Changed
+
+- Docker: the containers are named after the library
+  (`rainfall-thresholds-ui`, `-mcp`, `-notebooks`), with the prefix in
+  `RAINFALL_THRESHOLDS_NAME` for a second copy. The notebooks move from port
+  8888 to **8881**, which no sister library uses; the calibration bench stays
+  on 3001; the MCP server is a new service on 8775.
+- Notebook 04 and the `examples` group use dpc-radar 0.6 and ispra-idrogeo
+  0.14. The notebook reads the ISTAT code with `macroregion_of`, uses
+  `event_against_threshold`, and gives a landslide dated to the day the
+  instant of the family's convention: the end of its day, the next local
+  midnight in Europe/Rome. It is saved without outputs: IdroGEO did not
+  answer on 28/11/2026, so the new code has not run against the live
+  services yet.
+- `benchmarks/measures/README.md` says which rule each measure used for a
+  landslide with no hour. They were made before the convention and are not
+  recomputed.
+
+
 ## [0.4.0] - 2026-11-28
 
 The rainfall logic of one domain that lived in Limen moves here, so that

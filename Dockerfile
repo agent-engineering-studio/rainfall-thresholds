@@ -1,10 +1,10 @@
-# rainfall-thresholds with the example notebooks and the benchmark.
+# rainfall-thresholds with the example notebooks, the MCP server and the benchmark.
 #
-#   docker compose up            the notebooks, on http://localhost:8888
+#   docker compose up notebooks  the notebooks, on http://localhost:8881
+#   docker compose up mcp        the MCP server, on http://localhost:8775/mcp
 #   make docker-bench            the benchmark
 #
-# No fixed names: Compose names the image and the containers after the
-# project (the folder, or COMPOSE_PROJECT_NAME), so copies never clash.
+# The names come from compose.yaml: rainfall-thresholds-notebooks, -mcp.
 FROM python:3.13-slim
 
 COPY --from=ghcr.io/astral-sh/uv:0.13 /uv /bin/uv
@@ -25,18 +25,18 @@ WORKDIR /app
 
 # The dependencies first: this layer is rebuilt only when they change.
 COPY pyproject.toml uv.lock ./
-RUN uv sync --locked --no-dev --group examples --no-install-project
+RUN uv sync --locked --no-dev --group examples --extra mcp --no-install-project
 
 COPY README.md LICENSE ./
 COPY src src
-RUN uv sync --locked --no-dev --group examples --no-editable
+RUN uv sync --locked --no-dev --group examples --extra mcp --no-editable
 
 # What the notebooks and the benchmark read, at the same relative paths.
 COPY benchmarks benchmarks
 COPY tests/fixtures tests/fixtures
 COPY notebooks notebooks
 
-RUN python -c "import rainfall_thresholds, matplotlib, jupyterlab; print(rainfall_thresholds.__version__)"
+RUN python -c "import rainfall_thresholds.mcp_server, matplotlib, jupyterlab; print(rainfall_thresholds.__version__)"
 
 EXPOSE 8888
 WORKDIR /app/notebooks

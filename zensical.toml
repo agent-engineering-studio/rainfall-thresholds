@@ -30,6 +30,7 @@ nav = [
     { "Italy (T5 thresholds)" = "api/italy.md" },
     { "A series against a threshold" = "api/assess.md" },
     { "Antecedent precipitation" = "api/antecedent.md" },
+    { "How much to trust, per region" = "api/trust.md" },
     { "Published regional thresholds" = "api/regional.md" },
     { "Rain sources" = "api/sources.md" },
     { "Measuring a threshold" = "api/measure.md" },

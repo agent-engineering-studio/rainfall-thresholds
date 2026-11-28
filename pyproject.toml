@@ -1,6 +1,6 @@
 [project]
 name = "rainfall-thresholds"
-version = "0.4.0"
+version = "0.5.0"
 description = "Rainfall intensity-duration thresholds for shallow landslides (Caine power law, frequentist fitting)"
 readme = "README.md"
 keywords = ["landslide", "rainfall threshold", "intensity-duration", "caine", "hydrology", "natural hazards", "italy", "italica"]
@@ -57,8 +57,8 @@ examples = [
     "matplotlib>=3.9",
     # Only for notebooks/04: the sister libraries, joined in a notebook as Limen
     # joins them. The package itself never imports them (tests/test_package.py).
-    "dpc-radar~=0.3.0",
-    "ispra-idrogeo~=0.10.0",
+    "dpc-radar~=0.6.0",
+    "ispra-idrogeo~=0.14.0",
 ]
 
 docs = [

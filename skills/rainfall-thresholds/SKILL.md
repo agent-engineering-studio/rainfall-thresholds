@@ -45,13 +45,29 @@ if event is not None:
 ```
 
 The same as data, for an answer in words: `rainfall_thresholds.facts`
-(`threshold_facts`, `assess_facts`, `fit_facts`), and before you send the
-text, `rainfall_thresholds.check.check_text(text, facts)`.
+(`threshold_facts`, `assess_facts`, `fit_facts`, `trust_facts`,
+`margin_facts`, `published_facts`), and before you send the text,
+`rainfall_thresholds.check.check_text(text, facts)`.
+
+From a mapping `{hour: mm or None}`, `event_against_threshold(hours,
+threshold, no_rain_break_hours=6, min_event_mm=2.0, choice="strongest")`
+gives the event with `.ratio`, `.excess_decades` and `.at_least` (the rain is
+a lower bound: hours not measured inside the event or at its edges).
+`rain_to_threshold(event, threshold, more_hours=(1, 3, 6))` is the rain still
+needed if the event goes on: arithmetic on the line, not a forecast.
+`calibration_of("Valle d'Aosta")` says how the line sits on the landslides of
+a region (`.position`: `"high"`, `"low"`, `"as fitted"`); `macroregion_of`
+and `calibration_of` take the ISTAT region code too.
 
 ## The traps
 
 - **mm is not mm/h.** `cumulated(D)` is a total in mm, `intensity(D)` a mean
   intensity in mm/h. Over 35 hours T5 asks 30.9 mm, not 30.9 mm/h.
+- **The line is not equally good everywhere.** 16.2 % of Valle d'Aosta's
+  landslides are below it, 1.3 % of Calabria's, where 5 % is expected. Say it
+  (`trust_facts`), and say when the landslides are too few to tell.
+- **A landslide with a day and no hour** takes the end of its day: the next
+  local midnight in Europe/Rome, as UTC. Not noon, not 00:00, not +24 h.
 - **Exceedance is in decades**, `log10(I / I(D))`: +0.3 is twice the threshold
   intensity, +1 ten times; below zero is below. A dry event is `-inf`.
 - **The last event is not the one that matters.** A storm, six dry hours and

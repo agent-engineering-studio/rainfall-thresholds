@@ -55,7 +55,7 @@ DESCRIPTIONS = {
     "measuring, the thresholds for Italy, benchmark, notebooks and Docker, API at a glance",
     "explainer.md": "an interactive intensity-duration plane in the browser: a region, a "
     "duration and a rain total against the Italian threshold and the landslides of the past",
-    "examples.md": "the four notebooks, the calibration bench and Try it",
+    "examples.md": "the five notebooks, the calibration bench and Try it",
     "benchmark.md": "known cases where the answer is known, and how each version scores",
     "roadmap.md": "the phases of the plan, what each measured, what is still open",
     "riuso.md": "in Italian, for a public body: the calibration bench, what it does not do, "

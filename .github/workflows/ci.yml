@@ -63,7 +63,7 @@ jobs:
       - run: uv sync --locked --group examples
       - name: Every offline notebook runs (04 needs the network)
         working-directory: notebooks
-        run: uv run --group examples jupyter nbconvert --to notebook --execute --output-dir /tmp/run 01_*.ipynb 02_*.ipynb 03_*.ipynb
+        run: uv run --group examples jupyter nbconvert --to notebook --execute --output-dir /tmp/run 01_*.ipynb 02_*.ipynb 03_*.ipynb 05_*.ipynb
 
   app:
     runs-on: ubuntu-latest
