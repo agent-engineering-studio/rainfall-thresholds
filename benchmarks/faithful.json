@@ -1,77 +1,163 @@
 {
-  "about": "Questions, the tool that answers them, and answers written by hand: one faithful, one with known faults. `expect` lists the faults check_text must find, as [text, fault]. The facts are computed by the library when the set runs.",
-  "cases": [
+ "about": "Questions, the tool that answers them, and answers written by hand: one faithful, one with known faults. `expect` lists the faults check_text must find, as [text, fault]. The facts are computed by the library when the set runs.",
+ "cases": [
+  {
+   "id": "liguria-24h",
+   "question": "How much rain does it take in 24 hours to trigger landslides in Liguria?",
+   "tool": "threshold",
+   "args": {
+    "region": "Liguria",
+    "duration_h": 24
+   },
+   "answers": [
     {
-      "id": "liguria-24h",
-      "question": "How much rain does it take in 24 hours to trigger landslides in Liguria?",
-      "tool": "threshold",
-      "args": {"region": "Liguria", "duration_h": 24},
-      "answers": [
-        {
-          "by": "hand, faithful",
-          "text": "In Liguria the T5 threshold asks 30.0 mm in 24 h, 1.25 mm/h on average. It was fitted on 2,659 landslides of northern Italy, at rain gauges. A threshold exceeded is not an alert: the official alert is the bulletin of the Civil Protection.",
-          "expect": []
-        },
-        {
-          "by": "hand, faults",
-          "text": "In Liguria it takes 30 mm/h for a whole day, a threshold fitted on 4,000 landslides.",
-          "expect": [["30 mm/h", "unit"], ["4,000", "invented"]]
-        }
-      ]
+     "by": "hand, faithful",
+     "text": "In Liguria the T5 threshold asks 30.0 mm in 24 h, 1.25 mm/h on average. It was fitted on 2,659 landslides of northern Italy, at rain gauges. A threshold exceeded is not an alert: the official alert is the bulletin of the Civil Protection.",
+     "expect": []
     },
     {
-      "id": "melito-storm",
-      "question": "Was the rain at Melito di Porto Salvo on 10 October 2026 above the landslide threshold?",
-      "tool": "assess",
-      "args": {"series": "melito-srt1.csv", "region": "Calabria", "source": "DPC SRT1"},
-      "answers": [
-        {
-          "by": "hand, faithful",
-          "text": "Yes. On the DPC radar Melito got 165.7 mm in 35 h, 4.73 mm/h, where T5 asks 30.9 mm: +0.73 decades, about five times the threshold intensity. This is radar rain, and the threshold is fitted on rain gauges. It is not an alert: see the DPC bulletin.",
-          "expect": []
-        },
-        {
-          "by": "hand, faults",
-          "text": "Melito got 165.7 mm in 35 hours, about 31 mm/h against a threshold of 30.9 mm/h, 0.8 decades above it. The threshold comes from 1,700 landslides.",
-          "expect": [["31 mm/h", "unit"], ["30.9 mm/h", "unit"], ["0.8 decades", "rounded"], ["1,700", "invented"]]
-        }
+     "by": "hand, faults",
+     "text": "In Liguria it takes 30 mm/h for a whole day, a threshold fitted on 4,000 landslides.",
+     "expect": [
+      [
+       "30 mm/h",
+       "unit"
+      ],
+      [
+       "4,000",
+       "invented"
       ]
-    },
-    {
-      "id": "melito-gap",
-      "question": "The radar missed three hours of the storm. What can we say?",
-      "tool": "assess",
-      "args": {"series": "melito-gap.csv", "region": "Calabria", "source": "DPC SRT1"},
-      "answers": [
-        {
-          "by": "hand, faithful",
-          "text": "What was measured is 59.6 mm in 8 h, already +0.51 decades above T5, which asks 18.3 mm. 3 hours were not measured, so 59.6 mm is a lower bound.",
-          "expect": []
-        },
-        {
-          "by": "hand, faults",
-          "text": "The storm gave 62.0 mm in 8 hours, with 0 hours missing.",
-          "expect": [["62.0 mm", "invented"], ["0 hours", "invented"]]
-        }
-      ]
-    },
-    {
-      "id": "fit-liguria",
-      "question": "Fit a threshold on the Liguria landslides of e-ITALICA.",
-      "tool": "fit",
-      "args": {"region": "Liguria"},
-      "answers": [
-        {
-          "by": "hand, faithful",
-          "text": "On 1,603 landslides of Liguria, T5 is I = 6.76 D^-0.506: 32.5 mm in 24 h and 56.0 mm in 72 h. About 1,600 landslides is enough for a stable fit.",
-          "expect": []
-        },
-        {
-          "by": "hand, faults",
-          "text": "The fitted threshold asks 32.5 mm/h in 24 hours and 56 mm in 48 hours.",
-          "expect": [["32.5 mm/h", "unit"], ["48 hours", "invented"]]
-        }
-      ]
+     ]
     }
-  ]
+   ]
+  },
+  {
+   "id": "melito-storm",
+   "question": "Was the rain at Melito di Porto Salvo on 10 October 2026 above the landslide threshold?",
+   "tool": "assess",
+   "args": {
+    "series": "melito-srt1.csv",
+    "region": "Calabria",
+    "source": "DPC SRT1"
+   },
+   "answers": [
+    {
+     "by": "hand, faithful",
+     "text": "Yes. On the DPC radar Melito got 165.7 mm in 35 h, 4.73 mm/h, where T5 asks 30.9 mm: +0.73 decades, about five times the threshold intensity. This is radar rain, and the threshold is fitted on rain gauges. It is not an alert: see the DPC bulletin.",
+     "expect": []
+    },
+    {
+     "by": "hand, faults",
+     "text": "Melito got 165.7 mm in 35 hours, about 31 mm/h against a threshold of 30.9 mm/h, 0.8 decades above it. The threshold comes from 1,700 landslides.",
+     "expect": [
+      [
+       "31 mm/h",
+       "unit"
+      ],
+      [
+       "30.9 mm/h",
+       "unit"
+      ],
+      [
+       "0.8 decades",
+       "rounded"
+      ],
+      [
+       "1,700",
+       "invented"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "melito-gap",
+   "question": "The radar missed three hours of the storm. What can we say?",
+   "tool": "assess",
+   "args": {
+    "series": "melito-gap.csv",
+    "region": "Calabria",
+    "source": "DPC SRT1"
+   },
+   "answers": [
+    {
+     "by": "hand, faithful",
+     "text": "What was measured is 59.6 mm in 8 h, already +0.51 decades above T5, which asks 18.3 mm. 3 hours were not measured, so 59.6 mm is a lower bound.",
+     "expect": []
+    },
+    {
+     "by": "hand, faults",
+     "text": "The storm gave 62.0 mm in 8 hours, with 0 hours missing.",
+     "expect": [
+      [
+       "62.0 mm",
+       "invented"
+      ],
+      [
+       "0 hours",
+       "invented"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fit-liguria",
+   "question": "Fit a threshold on the Liguria landslides of e-ITALICA.",
+   "tool": "fit",
+   "args": {
+    "region": "Liguria"
+   },
+   "answers": [
+    {
+     "by": "hand, faithful",
+     "text": "On 1,603 landslides of Liguria, T5 is I = 6.76 D^-0.506: 32.5 mm in 24 h and 56.0 mm in 72 h. About 1,600 landslides is enough for a stable fit.",
+     "expect": []
+    },
+    {
+     "by": "hand, faults",
+     "text": "The fitted threshold asks 32.5 mm/h in 24 hours and 56 mm in 48 hours.",
+     "expect": [
+      [
+       "32.5 mm/h",
+       "unit"
+      ],
+      [
+       "48 hours",
+       "invented"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valle-daosta-trust",
+   "question": "How far can the landslide threshold be trusted in Valle d'Aosta?",
+   "tool": "trust",
+   "args": {
+    "region": "Valle d'Aosta"
+   },
+   "answers": [
+    {
+     "by": "hand, faithful",
+     "text": "Less than elsewhere. Of the 68 landslides the threshold was fitted on in Valle d'Aosta, 11 are below it: 16.2 %, where the fit expects 5 %. With so few landslides the real share can be anywhere from 9.3 % to 26.7 %, still above 5 %: the line is high there and misses more landslides. A threshold exceeded is not an alert.",
+     "expect": []
+    },
+    {
+     "by": "hand, faults",
+     "text": "It is well calibrated: 5 % of its 680 landslides are below the line, 3 % at most.",
+     "expect": [
+      [
+       "680",
+       "invented"
+      ],
+      [
+       "3 %",
+       "invented"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
 }

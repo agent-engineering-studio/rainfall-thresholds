@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Any
 
 from rainfall_thresholds.check import check_text
-from rainfall_thresholds.facts import assess_facts, fit_facts, threshold_facts
+from rainfall_thresholds.facts import assess_facts, fit_facts, threshold_facts, trust_facts
 
 HERE = Path(__file__).parent
 FIXTURE = HERE.parent / "tests" / "fixtures" / "italica_v4_dur_rain.csv"
@@ -56,6 +56,8 @@ def facts(case: dict[str, Any]) -> dict[str, Any]:
         return fit_facts(
             [(float(r["duration_h"]), float(r["cumulated_rainfall_mm"])) for r in rows]
         )
+    if case["tool"] == "trust":
+        return trust_facts(args["region"])
     raise ValueError(f"unknown tool {case['tool']!r}")
 
 
