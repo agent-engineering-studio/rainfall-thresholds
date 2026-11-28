@@ -6,6 +6,26 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-11-28
+
+No change to the package: the notebook that could not run, and a note.
+
+### Changed
+
+- Notebook 04 has run against the live services and is saved with its
+  outputs (28/11/2026, dpc-radar 0.6, ispra-idrogeo 0.15): 39 landslides
+  dated to the day since July 2026, 7 of them slides or flows; 5 of the 6
+  with a rain event had it above T5 on radar rain, and 5 events touch the
+  edge of the 48 hours read, so they may be longer. It takes the instant of a
+  landslide from ispra-idrogeo's `instant_utc`. Seven landslides are an
+  anecdote, not a measure.
+- The `examples` group uses ispra-idrogeo 0.15.
+- `tests/fixtures/opendata-record-v2.json` is the schema published with
+  egms-client 0.11.0 at
+  https://agentengineering.it/egms-client/schema/opendata-record-v2.json:
+  compared on 28/11/2026, same content as the copy 0.5.0 was tested against.
+
+
 ## [0.5.0] - 2026-11-28
 
 How much to trust the line in each region, the rain still missing, and the
